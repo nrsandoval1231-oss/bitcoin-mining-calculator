@@ -1,0 +1,14 @@
+# This repo is PUBLIC (GitHub Pages). Internal working docs — handoff notes, the PRD, research
+# notes, sales framing — live in "../Bitcoin Tool Docs (internal)/" and must never land here.
+HANDOFF.md
+PRD.md
+RESEARCH_NOTES.md
+UTILITY_POWER_NOTES.md
+*-internal.md
+*-INTERNAL.md
+
+# OS / editor cruft
+Thumbs.db
+Desktop.ini
+.DS_Store
+*~

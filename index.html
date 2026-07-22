@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Bitcoin Mining Calculator</title>
+<meta name="description" content="Will your mine pay? Check any rig against your real power cost — grid, gas, or hosted. Built by 2G Energy Rental." />
+<!-- Add-to-home-screen (PWA). manifest.json + icon-192/512.png sit next to this file when hosted;
+     if they're missing (e.g. the file is emailed on its own) the page still works exactly the same. -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#13641f" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Mining Calc" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/png;base64,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" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #eceded; }
+  #root { min-height: 100vh; }
+  .boot { color:#13641f; font-family: 'Noto Sans', Arial, Helvetica, sans-serif; padding: 40px; font-size: 14px; line-height:1.7; }
+  .boot .err { color:#e20031; font-weight:bold; }
+  .boot .detail { color:#87888a; white-space:pre-wrap; }
+  /* plain-language hover tooltip on the ⓘ jargon-helper icons */
+  .tip { position: relative; display: inline-flex; align-items: center; justify-content: center;
+    width: 15px; height: 15px; margin-left: 5px; border-radius: 50%; background: #eceded;
+    color: #58585a; font-size: 10px; font-weight: 700; cursor: help; vertical-align: middle;
+    font-family: 'Noto Sans', Arial, sans-serif; letter-spacing: 0; text-transform: none; }
+  .tip .tip-body { visibility: hidden; opacity: 0; position: absolute; z-index: 60; left: 50%;
+    transform: translateX(-50%); bottom: 145%; width: 230px; background: #333; color: #fff;
+    padding: 9px 11px; border-radius: 6px; font-size: 11.5px; line-height: 1.45; font-weight: 400;
+    text-align: left; box-shadow: 0 6px 20px rgba(0,0,0,.22); transition: opacity .12s; pointer-events: none; }
+  .tip .tip-body::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: #333; }
+  /* hover on desktop; TAP on a phone — the ⓘ is focusable (tabIndex 0), so a tap opens the bubble
+     and tapping anywhere else (blur) closes it. No JS, works the same in both modes. */
+  .tip:hover .tip-body, .tip:focus .tip-body, .tip:focus-within .tip-body { visibility: visible; opacity: 1; }
+  .tip:focus { outline: none; }
+  /* Phone/narrow layout (field use). */
+  @media (max-width: 800px) {
+    /* Stack the input rail above the results. minmax(0,…) + min-width:0 matter: without them a
+       grid column can't shrink below its widest child, so the wide tables would push the whole
+       page sideways instead of scrolling inside their own card. */
+    .proforma-grid { grid-template-columns: minmax(0, 1fr) !important; padding: 16px 12px !important; }
+    .proforma-grid > *, .results-col > * { min-width: 0; }
+    /* On a phone the bubble docks to the bottom of the screen instead of floating next to the ⓘ —
+       a bubble anchored to an icon near the screen edge would run off-screen at 375px. */
+    .tip .tip-body { position: fixed; left: 12px; right: 12px; bottom: 14px; width: auto;
+      transform: none; font-size: 13px; padding: 12px 14px; }
+    .tip .tip-body::after { display: none; }
+    /* thumb-sized tap targets + 16px inputs so iOS Safari doesn't zoom on focus */
+    button { min-height: 42px; }
+    input, select { font-size: 16px !important; min-height: 42px; }
+    /* wide tables scroll inside their own card instead of stretching the page sideways */
+    .x-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .x-scroll table { min-width: 520px; }
+  }
+  /* nothing should ever push the page itself sideways on a phone (screen only — clipping the
+     document in print can drop content off the right edge of the PDF) */
+  @media screen { html, body { overflow-x: hidden; } }
+  /* Print / Save-as-PDF one-pager: drop the input rail + on-screen controls,
+     let the results column run full width, and force brand colors to render. */
+  .print-only { display: none; }
+  @media print {
+    @page { margin: 11mm; }
+    html, body { background: #fff !important; }
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    .proforma-grid { grid-template-columns: 1fr !important; }
+    /* keep each results card intact across a page boundary — no card splits mid-chart/mid-banner */
+    .results-col > div { break-inside: avoid; page-break-inside: avoid; margin-bottom: 10px !important; }
+    /* except the tall steady-state table: let it flow and break between rows, not jump a whole page */
+    .print-tall { break-inside: auto !important; page-break-inside: auto !important; }
+    .print-tall tr, .print-tall thead { break-inside: avoid; page-break-inside: avoid; }
+    .print-tall thead { display: table-header-group; } /* repeat header on the 2nd page of the table */
+    svg { break-inside: avoid; page-break-inside: avoid; }
+    .print-card { break-inside: avoid; page-break-inside: avoid; }
+    .detail-body { display: block !important; } /* the collapsible steady-state table always prints, even when hidden on screen */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"><div class="boot" id="boot">Loading Bitcoin Mining Calculator&hellip; <span id="bs" style="color:#87888a"></span></div></div>
+
+<script>
+  window.__booted = false;
+  function showError(where, msg){
+    var r = document.getElementById('root'); if(!r) return;
+    r.innerHTML = '<div class="boot"><span class="err">The app hit an error while starting.</span>'
+      + '<br><br>Stage: ' + where + '<br><br><span class="detail">' + (msg||'') + '</span>'
+      + '<br><br style="color:#87888a">Send this text back to continue fixing it.</div>';
+  }
+  window.addEventListener('error', function(e){
+    if(!window.__booted) showError('runtime', (e&&e.message?e.message:'unknown'));
+  });
+  function bs(t){ var el=document.getElementById('bs'); if(el) el.textContent=t; }
+  function loadFrom(urls,name,cb){ var i=0;(function go(){ if(i>=urls.length){cb(new Error('Could not load '+name));return;} var s=document.createElement('script'); s.src=urls[i]; s.crossOrigin='anonymous'; s.onload=function(){cb(null);}; s.onerror=function(){i++;go();}; document.head.appendChild(s);})(); }
+  var REACT=["https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js","https://unpkg.com/react@18/umd/react.production.min.js","https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"];
+  var RDOM=["https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js","https://unpkg.com/react-dom@18/umd/react-dom.production.min.js","https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"];
+  var BABEL=["https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js","https://unpkg.com/@babel/standalone/babel.min.js","https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"];
+  bs('loading React\u2026');
+  loadFrom(REACT,'React',function(e){ if(e)return showError('React CDN',e.message);
+    bs('loading React DOM\u2026');
+    loadFrom(RDOM,'React DOM',function(e){ if(e)return showError('React DOM CDN',e.message);
+      bs('loading compiler\u2026');
+      loadFrom(BABEL,'Babel',function(e){ if(e)return showError('Babel CDN',e.message);
+        bs('compiling\u2026');
+        try {
+          if (typeof Babel === 'undefined') { showError('babel-missing','Babel global not found after load'); return; }
+          var code = document.getElementById('appsource').textContent;
+          var out = Babel.transform(code, { presets: [['react', { runtime: 'classic' }]], sourceType: 'script', comments: false }).code;
+          window.__booted = true;
+          var require = function(m){
+            if(m==='react') return window.React;
+            if(m==='react-dom'||m==='react-dom/client') return window.ReactDOM;
+            if(m && m.indexOf('jsx-runtime')>-1){
+              return { jsx: window.React.createElement, jsxs: window.React.createElement, Fragment: window.React.Fragment };
+            }
+            throw new Error('Unknown module: '+m);
+          };
+          var module = { exports: {} }, exports = module.exports;
+          eval(out);
+        } catch(err){
+          window.__booted = false;
+          showError('compile/run', (err&&err.stack)?err.stack:(err&&err.message?err.message:String(err)));
+        }
+      });
+    });
+  });
+</script>
+
+<script type="text/plain" id="appsource">
+const { useState, useMemo, useEffect } = React;
+
+/* ============================================================
+   2G MINING PROFORMA MODELER v4 — 2G rental vs owned vs grid
+   Bitcoin mining on stranded gas · month-by-month engine
+   Models: deployment lead time, network hashrate growth,
+   the 2028 halving, pool fees, and genset residual value.
+   Market data verified July 2026:
+     BTC ~$62–64k · network ~940 EH/s · hashprice ~$29/PH/day
+     Current-gen air-cooled ASIC: 270 TH/s @ 3.645 kW, 13.5 J/TH (~$21/TH)
+     MW-class NG genset factory lead times ~12+ months
+   ============================================================ */
+
+// Palette mapped onto the locked 2G Energy Rental design system (see Design System/):
+// page recedes to gray-10, cards are white/raised, inset inputs sit back at gray-10,
+// single Pantone-364-U green throughout. No dark mode. Semantic amber = warning (#fbba00),
+// red = danger (#e20031). Do not invent new hex values here.
+const C = {
+  bg: "#eceded",       // page background (gray-10)
+  panel: "#ffffff",    // cards / raised surfaces
+  panel2: "#eceded",   // inset controls (inputs), zebra rows
+  line: "#b1b3b4",     // borders / dividers (gray-40)
+  text: "#58585a",     // default body text (gray-80)
+  muted: "#87888a",    // muted/secondary text (gray-60)
+  green: "#13641f",    // 2G green (primary) — the 2G rental + rent-to-own series
+  greenLt: "#caffdb",  // light-green tint ONLY (pale panels, hover) — never a CTA
+  amber: "#fbba00",    // semantic warning — the "CUSTOM inputs" flag
+  red: "#e20031",      // semantic danger — halving markers, errors
+  // multi-series data-viz colors (from the design-system chart palette) — used ONLY
+  // for the two non-2G paths on the cash chart/tables, never for UI chrome.
+  owned: "#ee7f01",    // owned generation series (chart orange — reads on white)
+  grid: "#005d9d",     // utility/grid power series (chart blue = info)
+};
+
+const fmt = (n, d = 0) =>
+  n === null || n === undefined || isNaN(n) || !isFinite(n)
+    ? "—"
+    : n.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
+const money = (n, d = 0) =>
+  n === null || n === undefined || isNaN(n) || !isFinite(n)
+    ? "—"
+    : (n < 0 ? "(" : "") + "$" + fmt(Math.abs(n), d) + (n < 0 ? ")" : "");
+const moneyM = (n) =>
+  n === null || isNaN(n) ? "—" :
+  (n < 0 ? "($" : "$") + Math.abs(n / 1e6).toFixed(2) + "M" + (n < 0 ? ")" : "");
+
+/* months from today to the next halving. Anchored to ~April 20, 2028; after it passes,
+   rolls to the following halving (every 4 years). Computed at load so the countdown never
+   goes stale — unlike a hardcoded number. (browser new Date() is fine here.) */
+function monthsUntilHalving() {
+  const now = new Date();
+  let target = new Date(2028, 3, 20); // April = month index 3
+  while (target <= now) target = new Date(target.getFullYear() + 4, 3, 20);
+  const months = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+  return Math.max(0, months);
+}
+
+/* ---------- default assumptions ----------
+   verify: true = update before customer use */
+// Where the earned "Talk to 2G" CTA sends leads (plain mailto — no backend).
+// ⚠️ NICK: confirm/swap this before hosting — a generic inbox (e.g. sales@2grental.com)
+// is usually better for a public tool than a personal address.
+const CONTACT_EMAIL = "n.sandoval@2grental.com";
+
+const DEFAULTS = {
+  // site & market
+  siteKW:     { v: 3000,   label: "Site size (kW)",                         grp: "Site & market", min: 1 },
+  gasPrice:   { v: 0.25,   label: "Stranded gas price ($/MCF)",             grp: "Site & market", min: 0, step: 0.05 },
+  btcPrice:   { v: 63000,  label: "BTC price ($) — spot Jul 2026",          grp: "Site & market", min: 0, step: 1000 },
+  // Mode A hero input — a miner's own all-in power cost. Not used by Mode B (which derives
+  // power cost from gas/gensets/grid), so it's excluded from the Mode B assumptions rail.
+  powerCost:  { v: 7.0,    label: "Your power cost (¢/kWh)",                 grp: "Mode A", min: 0, step: 0.5 },
+  netHashEH:  { v: 940,    label: "Network hashrate (EH/s) — Jul 2026",     grp: "Site & market", min: 0.01 },
+  issuance:   { v: 450,    label: "Network BTC issued/day (pre-halving)",   grp: "Site & market", min: 0 },
+  poolFee:    { v: 1.5,    label: "Pool fee (%)",                           grp: "Site & market", min: 0, max: 100 },
+  hashGrowth: { v: 10,     label: "Network hashrate growth (%/yr)",         grp: "Site & market", min: -50, max: 200 },
+  priceGrowth:{ v: 0,      label: "BTC price growth (%/yr)",                grp: "Site & market", min: -50, max: 200 },
+  halvingMo:  { v: monthsUntilHalving(), label: "Months until halving (auto, ≈ Apr 2028)", grp: "Site & market", min: 0 },
+  years:      { v: 5,      label: "Comparison horizon (years)",             grp: "Site & market", min: 1, max: 20 },
+  discRate:   { v: 0,      label: "Discount rate (%/yr, for NPV — 0 = off)", grp: "Site & market", min: 0, max: 40 },
+  // miners (same fleet both sides)
+  hashTH:     { v: 270,    label: "ASIC hash rate (TH/s)",                  grp: "Mining hardware", min: 1 },
+  drawKW:     { v: 3.645,  label: "ASIC power draw (kW)",                   grp: "Mining hardware", min: 0.1 },
+  asicPrice:  { v: 5650,   label: "ASIC price ($/unit)",                    grp: "Mining hardware", min: 0 },
+  // owned power
+  msrpPerKW:  { v: 1500,   label: "Owned genset cost ($/kW installed)",     grp: "Owned power", min: 0 },
+  ownUptime:  { v: 85,     label: "Owned uptime (%) — 80–90 typical",       grp: "Owned power", min: 0, max: 100 },
+  ownedMaint: { v: 1.0,    label: "Owned routine O&M (¢/kWh)",                grp: "Owned power", min: 0 },
+  rebuildCost:{ v: 90,     label: "Top-end rebuild cost ($/kW per event)",   grp: "Owned power", min: 0 },
+  rebuildHrs: { v: 35000,  label: "Engine hours between rebuilds",           grp: "Owned power", min: 1 },
+  otherOpex:  { v: 200000, label: "Other site opex — owned ($/yr)",         grp: "Owned power", min: 0 },
+  ownedLagMo: { v: 12,     label: "Genset lead time (months to first hash)",grp: "Owned power", min: 0 },
+  residualPct:{ v: 40,     label: "Genset residual value @ horizon (%)",    grp: "Owned power", min: 0, max: 100 },
+  fuelOwn:    { v: 9.27,   label: "Owned fuel burn (scf/hr per kW)",        grp: "Owned power", min: 0 },
+  // 2G rental
+  rentalRate: { v: 38,     label: "2G rental rate ($/kW/mo, all-in)",       grp: "2G rental", min: 0 },
+  rentUptime: { v: 98,     label: "2G uptime, guaranteed (%)",              grp: "2G rental", min: 0, max: 100 },
+  rentalLagMo:{ v: 1,      label: "2G deployment (months to first hash)",   grp: "2G rental", min: 0 },
+  fuel2G:     { v: 9.31,   label: "2G fleet fuel burn (scf/hr per kW)",     grp: "2G rental", min: 0 },
+  // utility / grid power (the "just buy power" option)
+  gridRate:   { v: 0.13,   label: "Grid energy rate ($/kWh, headline)",     grp: "Utility / grid power", min: 0, step: 0.01 },
+  gridUplift: { v: 1.5,    label: "Demand/capacity uplift (× headline)",    grp: "Utility / grid power", min: 1, max: 3 },
+  gridUptime: { v: 99,     label: "Grid uptime (%)",                        grp: "Utility / grid power", min: 0, max: 100 },
+  gridLagMo:  { v: 48,     label: "Interconnection wait (months to power)", grp: "Utility / grid power", min: 0 },
+  gridCapex:  { v: 400,    label: "Interconnection cost ($/kW up front)",   grp: "Utility / grid power", min: 0 },
+};
+
+/* ---------- deal-shape presets ----------
+   Each preset is a *deal shape*, not a market guess. The default is the one that
+   makes money at today's spot: a miner who already owns rigs, renting 2G power for
+   ~2 years through the current high-reward window (before the ≈2028 halving). The
+   full-build and upside shapes are one click away and honest when selected. */
+const PRESETS = {
+  bridge: {
+    label: "BRIDGE · YOU OWN RIGS",
+    desc: "You already own your miners. Rent 2G power for ~2 years through the current high-reward window. Profitable at today's $63k — no market recovery needed.",
+    patch: { asicPrice: 0, years: 2, rentalRate: 38, btcPrice: 63000, priceGrowth: 0, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
+  },
+  build: {
+    label: "FULL BUILD · NEW RIGS",
+    desc: "Buy new miners and rent power for 5 years. At a flat $63k the market has to help — check the break-even price below before taking it further.",
+    patch: { asicPrice: 5650, years: 5, rentalRate: 38, btcPrice: 63000, priceGrowth: 0, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
+  },
+  upside: {
+    label: "UPSIDE · BTC RECOVERS",
+    desc: "New rigs, 5 years, BTC back near its old highs (~$130k). Renting profits — and you never sank cash into a genset you can't un-buy.",
+    patch: { asicPrice: 5650, years: 5, rentalRate: 38, btcPrice: 130000, priceGrowth: 0, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
+  },
+};
+
+/* ---------- ASIC cooling presets ----------
+   The reference machines for a stranded-gas site. Air-cooled is the default
+   (no coolant loop/CDU at a wellhead); hydro and immersion pack more hash per
+   unit but need plumbing/a tank. Toggling swaps the three hardware values as a
+   set — the engine handles the downstream unit-count + efficiency math with no
+   other changes. Specs verified Jul 2026:
+     · S21 XP air-cooled  270 TH/s @ 3.645 kW (13.5 J/TH, ≈$21/TH) — RESEARCH_NOTES.md
+     · S21 XP Hydro       473 TH/s @ 5.676 kW (12 J/TH, ≈$19.5/TH) — RESEARCH_NOTES.md
+     · S21 XP Immersion   300 TH/s @ 4.05 kW  (13.5 J/TH, ≈$16/TH) — NEM mode; HEM is
+       380 TH/s @ 5.7 kW (15 J/TH). NEM chosen: on a fixed-kW site it out-earns HEM. */
+const COOLING = {
+  air:   { label: "AIR",       name: "air-cooled",       short: "S21 XP",           note: "No plumbing — the realistic wellhead default.",           patch: { hashTH: 270, drawKW: 3.645, asicPrice: 5650 } },
+  hydro: { label: "HYDRO",     name: "hydro-cooled",     short: "S21 XP Hydro",     note: "More hash per unit; needs a coolant loop/CDU.",          patch: { hashTH: 473, drawKW: 5.676, asicPrice: 9250 } },
+  imm:   { label: "IMMERSION", name: "immersion-cooled", short: "S21 XP Immersion", note: "Runs submerged in dielectric fluid; needs a tank + heat exchanger.", patch: { hashTH: 300, drawKW: 4.05, asicPrice: 4899 } },
+};
+// which cooling preset the current machine matches (null = hand-edited / custom).
+// Identified by the PHYSICAL specs (hash rate + draw), not price — price is a deal-shape
+// variable ($0 when you already own the rigs), so it must not decide the machine type.
+function activeCooling(a) {
+  return Object.keys(COOLING).find((key) =>
+    a.hashTH.v === COOLING[key].patch.hashTH && a.drawKW.v === COOLING[key].patch.drawKW
+  ) || null;
+}
+
+// apply a preset patch onto a base assumption set, returning a fresh copy
+function applyPatch(base, patch) {
+  const a = {};
+  Object.keys(base).forEach((k) => (a[k] = { ...base[k], v: patch[k] !== undefined ? patch[k] : base[k].v }));
+  return a;
+}
+
+/* ---------- rig catalog ----------
+   The cooling toggle (COOLING) grown up: a flat list of the machines miners actually run,
+   two makers for neutrality. Efficiency (J/TH) + hashrate are the canonical specs; price is
+   editable/secondary (only touches ROI/payback, not profit-per-day or break-even power cost).
+   drawKW is derived: hashTH × J/TH ÷ 1000. Specs verified 2026-07-22 (see PRD + RESEARCH_NOTES).
+   "Custom" is not a row — it's the state when the machine matches no preset (user typed specs). */
+const RIGS = [
+  { id: "s21xp",    name: "Antminer S21 XP",           maker: "Bitmain", hashTH: 270, jTH: 13.5,  price: 5650  },
+  { id: "s21xphyd", name: "Antminer S21 XP Hydro",     maker: "Bitmain", hashTH: 473, jTH: 12,    price: 9250  },
+  { id: "s21xpimm", name: "Antminer S21 XP Immersion", maker: "Bitmain", hashTH: 300, jTH: 13.5,  price: 4899  },
+  { id: "s23hyd",   name: "Antminer S23 Hydro",        maker: "Bitmain", hashTH: 580, jTH: 9.5,   price: 13740 },
+  { id: "m63shyd",  name: "Whatsminer M63S Hydro",     maker: "MicroBT", hashTH: 390, jTH: 18.5,  price: 6000  },
+  { id: "s21",      name: "Antminer S21",              maker: "Bitmain", hashTH: 200, jTH: 17.75, price: 3200  },
+  { id: "s19xp",    name: "Antminer S19 XP",           maker: "Bitmain", hashTH: 140, jTH: 21.5,  price: 2000  },
+];
+const rigDrawKW = (r) => +(r.hashTH * r.jTH / 1000).toFixed(3);
+// which catalog rig the current machine matches (by physical specs), or null = custom
+function activeRig(a) {
+  return RIGS.find((r) => a.hashTH.v === r.hashTH && a.drawKW.v === rigDrawKW(r)) || null;
+}
+
+/* ---------- monthly simulation engine ---------- */
+function computeModel(a, dynamic) {
+  const g = (k) => a[k].v;
+  const kW = g("siteKW");
+  const nASIC = g("drawKW") > 0 ? Math.floor(kW / g("drawKW")) : 0; // whole units — a fleet is integer miners
+  const fleetTH = g("hashTH") * nASIC;
+  const genCapex = kW * g("msrpPerKW");
+  const hwCapex = nASIC * g("asicPrice");
+  const months = Math.max(12, Math.round(g("years") * 12));
+  const dpm = 365 / 12;
+  const dr = g("discRate") / 12 / 100; // monthly discount rate for NPV (0 ⇒ NPV = nominal net)
+
+  const revAt = (m, uptime) => {
+    const nh = g("netHashEH") * 1e6 * (dynamic ? Math.pow(1 + g("hashGrowth") / 100, m / 12) : 1);
+    // halvings repeat every 48 months after the first (≈Apr 2028, 2032, ...)
+    const nHalvings = dynamic && m >= g("halvingMo") ? 1 + Math.floor((m - g("halvingMo")) / 48) : 0;
+    const iss = g("issuance") / Math.pow(2, nHalvings);
+    const pr = g("btcPrice") * (dynamic ? Math.pow(1 + g("priceGrowth") / 100, m / 12) : 1);
+    return nh > 0 ? (fleetTH / nh) * iss * pr * (1 - g("poolFee") / 100) * dpm * uptime : 0;
+  };
+  const fuelMo = (scfkW, uptime) => (kW * scfkW * 8760 / 1000) * uptime * g("gasPrice") / 12;
+  // maintenance scales with energy actually generated: ¢/kWh × annual kWh ÷ 12
+  const maintMo = (uptime) => (g("ownedMaint") / 100) * (kW * 8760 * uptime) / 12;
+  // top-end rebuild: lump cost each time cumulative engine-hours cross a threshold
+  const rebuildAt = (hoursBefore, hoursAfter) => {
+    const thr = g("rebuildHrs");
+    if (thr <= 0) return 0;
+    const events = Math.floor(hoursAfter / thr) - Math.floor(hoursBefore / thr);
+    return events * g("rebuildCost") * kW;
+  };
+
+  // utility / grid power
+  const gridCap = kW * g("gridCapex"); // interconnection / substation cost, paid up front
+  // all-in power bill: headline rate × demand/capacity uplift × kWh generated that month
+  const gridPowerMo = (uptime) => g("gridRate") * g("gridUplift") * (kW * 8760 * uptime / 12);
+
+  const scen = (type) => {
+    const lag = dynamic
+      ? (type === "own" ? g("ownedLagMo")
+        : type === "grid" ? g("gridLagMo")
+        : g("rentalLagMo"))
+      : 0;
+    let c = 0, npv = 0;
+    const cash = [];
+    let engHrs = 0; // cumulative engine-hours on a customer-owned genset (drives rebuild timing)
+    for (let m = 0; m < months; m++) {
+      let f = 0;
+      if (type === "own" && m === 0) f -= genCapex;               // genset ordered day 1
+      if (type === "grid" && m === 0) f -= gridCap;               // interconnection paid up front
+      if (m === Math.max(0, Math.round(lag) - 1)) f -= hwCapex;   // miners bought pre power-on
+      if (m >= lag) {
+        if (type === "own") {
+          const up = g("ownUptime") / 100;
+          const h0 = engHrs; engHrs += 730 * up;
+          f += revAt(m, up) - fuelMo(g("fuelOwn"), up)
+            - maintMo(up) - g("otherOpex") / 12 - rebuildAt(h0, engHrs);
+        } else if (type === "grid") {
+          const up = g("gridUptime") / 100;
+          // no fuel, no genset, no rental — just the utility power bill
+          f += revAt(m, up) - gridPowerMo(up);
+        } else {
+          // 2G rental: all-in rate covers the genset, service, maintenance and rebuilds.
+          const up = g("rentUptime") / 100;
+          f += revAt(m, up) - fuelMo(g("fuel2G"), up) - g("rentalRate") * kW;
+        }
+      }
+      c += f;
+      npv += f / Math.pow(1 + dr, m);
+      cash.push(c);
+    }
+    // terminal value — only the owned path has an asset left at the horizon
+    let terminal = 0;
+    if (type === "own") terminal = genCapex * g("residualPct") / 100;
+    c += terminal;
+    npv += terminal / Math.pow(1 + dr, months - 1); // terminal realized at the horizon month
+    if (cash.length) cash[cash.length - 1] = c;
+    return { net: c, npv, cash, terminal };
+  };
+
+  const own = scen("own");
+  const rent = scen("rent");
+  const grid = scen("grid");
+
+  // steady-state annual run rate (both deployed, today's network) — the classic table
+  const steady = (uptime, isRental) => {
+    const kwh = 8760 * uptime * kW;
+    const mcf = (kW * (isRental ? g("fuel2G") : g("fuelOwn")) * 8760 / 1000) * uptime;
+    const rev = revAt(0, uptime) * 12; // month-0 economics annualized
+    const fuel = mcf * g("gasPrice");
+    const rental = isRental ? g("rentalRate") * kW * 12 : 0;
+    const routine = isRental ? 0 : (g("ownedMaint") / 100) * kwh;
+    // levelized rebuild reserve: (rebuild $/yr) = cost per event × events per year at this uptime
+    const hrsYr = 8760 * uptime;
+    const rebuildYr = isRental || g("rebuildHrs") <= 0 ? 0
+      : g("rebuildCost") * kW * (hrsYr / g("rebuildHrs"));
+    const maint = routine + rebuildYr;
+    const other = isRental ? 0 : g("otherOpex");
+    const opex = fuel + rental + maint + other;
+    const ocf = rev - opex;
+    const capex = isRental ? hwCapex : genCapex + hwCapex;
+    const payback = ocf > 0 ? capex / ocf : null;
+    const powerCost = kwh > 0 ? ((fuel + (isRental ? rental : maint)) / kwh) * 100 : null;
+    const lcoe = isRental ? powerCost
+      : kwh > 0 ? ((fuel + maint + genCapex / g("years")) / kwh) * 100 : null;
+    return { kwh, mcf, rev, fuel, rental, maint, other, opex, ocf, capex, payback, powerCost, lcoe };
+  };
+  const sOwn = steady(g("ownUptime") / 100, false);
+  const sRent = steady(g("rentUptime") / 100, true);
+
+  // grid steady-state (same shape as steady(), but power bill replaces fuel/rental/maint)
+  const sGrid = (() => {
+    const up = g("gridUptime") / 100;
+    const allIn = g("gridRate") * g("gridUplift");
+    const kwh = 8760 * up * kW;
+    const rev = revAt(0, up) * 12;
+    const power = allIn * kwh;         // annual utility bill, all-in
+    const capex = gridCap + hwCapex;   // interconnection + miners
+    const ocf = rev - power;
+    return {
+      kwh, mcf: 0, rev, fuel: 0, rental: 0, maint: 0, other: 0, power,
+      opex: power, ocf, capex,
+      payback: ocf > 0 ? capex / ocf : null,
+      powerCost: kwh > 0 ? (power / kwh) * 100 : null,
+      lcoe: kwh > 0 ? ((power + gridCap / g("years")) / kwh) * 100 : null,
+    };
+  })();
+
+  // single 2G path now (rent-to-own removed) — kept as best2G/best2Gnpv so callers don't churn
+  const best2G = rent.net;
+  const best2Gnpv = rent.npv;
+  return {
+    nASIC, fleetTH, genCapex, hwCapex, months, gridCap, discRate: g("discRate"),
+    dailyBTC: fleetTH / (g("netHashEH") * 1e6) * g("issuance"),
+    baseRevDay: revAt(0, 1) / dpm, // rev/day at 100% uptime, month 0
+    // implied hashprice: network-wide $/PH/s/day at these inputs (gross, index convention)
+    hashprice: g("netHashEH") > 0 ? (g("issuance") * g("btcPrice")) / (g("netHashEH") * 1000) : 0,
+    own, rent, grid, sOwn, sRent, sGrid,
+    best2G, advantage: best2G - own.net,
+    best2Gnpv, advantageNpv: best2Gnpv - own.npv,
+    uptimeDeltaPts: g("rentUptime") - g("ownUptime"),
+    extraKWh: sRent.kwh - sOwn.kwh,
+    firstHashOwn: dynamic ? g("ownedLagMo") : 0,
+    firstHashRent: dynamic ? g("rentalLagMo") : 0,
+    firstHashGrid: dynamic ? g("gridLagMo") : 0,
+  };
+}
+
+/* ---------- Mode A: "Does mining pay?" ----------
+   A right-now snapshot for ANY miner: type your power cost (¢/kWh), pick a rig, and see
+   whether it pays — no gas, gensets, or lead times. Deliberately closed-form (not the
+   month-by-month engine), but revenue reuses the SAME formula as computeModel's revAt(0,1)
+   so the two modes can never disagree on what a fleet earns. Computed at 100% uptime — margin
+   and both break-evens are uptime-invariant anyway; only the absolute $/day + payback scale. */
+function computeModeA(a) {
+  const g = (k) => a[k].v;
+  const kW = g("siteKW");
+  const nASIC = g("drawKW") > 0 ? Math.floor(kW / g("drawKW")) : 0;
+  const fleetTH = g("hashTH") * nASIC;
+  const nh = g("netHashEH") * 1e6; // network TH/s
+  // BTC/day the fleet earns AFTER pool fee — matches revAt()'s (1 − poolFee) treatment
+  const btcDay = nh > 0 ? (fleetTH / nh) * g("issuance") * (1 - g("poolFee") / 100) : 0;
+  const revDay = btcDay * g("btcPrice");
+  const costPerKWh = g("powerCost") / 100;        // ¢ → $
+  const powerDay = kW * 24 * costPerKWh;           // full-tilt daily power bill
+  const profitDay = revDay - powerDay;
+  const margin = revDay > 0 ? profitDay / revDay : 0;
+  const hwCapex = nASIC * g("asicPrice");
+  const dpm = 365 / 12;
+  return {
+    nASIC, fleetTH, hwCapex, btcDay, revDay, powerDay, profitDay, margin,
+    // BTC price at which revenue = power cost (revenue scales linearly with price)
+    beBTC: btcDay > 0 ? powerDay / btcDay : null,
+    // THE hook: the highest ¢/kWh you can pay and still break even
+    bePowerCost: kW > 0 ? (revDay / (kW * 24)) * 100 : null,
+    // months to pay back the rigs (only if buying and profitable)
+    paybackMo: hwCapex > 0 && profitDay > 0 ? hwCapex / profitDay / dpm : null,
+  };
+}
+
+/* scenario sensitivity — bear / base / bull BTC price */
+function scenarios(a, dynamic) {
+  const mk = (mult, name) => {
+    const b = {};
+    Object.keys(a).forEach((k) => (b[k] = { ...a[k] }));
+    b.btcPrice = { ...b.btcPrice, v: a.btcPrice.v * mult };
+    const m = computeModel(b, dynamic);
+    return { name, price: b.btcPrice.v, own: m.own.net, best2G: m.best2G, adv: m.best2G - m.own.net };
+  };
+  return [mk(0.65, "Bear"), mk(1, "Base"), mk(1.6, "Bull")];
+}
+
+/* break-even BTC price: the price at which the 2G advantage (best2G − owned) crosses zero.
+   The advantage rises with BTC price (2G earns during the rich early months owned is still
+   waiting), so this is a FLOOR — below it, owning wins. Binary search, assuming monotonicity. */
+function breakEvenBTC(a, dynamic) {
+  const advAt = (price) => {
+    const b = {};
+    Object.keys(a).forEach((k) => (b[k] = { ...a[k] }));
+    b.btcPrice = { ...b.btcPrice, v: price };
+    const m = computeModel(b, dynamic);
+    return m.best2G - m.own.net;
+  };
+  let lo = 0, hi = Math.max(a.btcPrice.v * 6, 6000);
+  const aLo = advAt(lo), aHi = advAt(hi);
+  if ((aLo > 0) === (aHi > 0)) return null; // no sign change in range → no clean break-even
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    if ((advAt(mid) > 0) === (aLo > 0)) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/* Absolute viability: the BTC price at which the BEST 2G path's net cash crosses zero — i.e.
+   "does this project make money at all, and if not, what would it take?".
+   Deliberately distinct from breakEvenBTC() above, which solves the 2G-vs-owned CROSSOVER.
+   That one is a relative metric: both paths can be deep losses on either side of it. */
+function viableBTC(a, dynamic) {
+  const netAt = (price) => {
+    const b = {};
+    Object.keys(a).forEach((k) => (b[k] = { ...a[k] }));
+    b.btcPrice = { ...b.btcPrice, v: price };
+    return computeModel(b, dynamic).best2G;
+  };
+  const lo0 = 0, hi0 = Math.max(a.btcPrice.v * 8, 20000);
+  if ((netAt(lo0) >= 0) === (netAt(hi0) >= 0)) return null; // no sign change in range
+  let lo = lo0, hi = hi0;
+  for (let i = 0; i < 50; i++) {
+    const mid = (lo + hi) / 2;
+    if (netAt(mid) < 0) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+
+/* ============================================================ shared UI */
+// 2G Energy Rental design system: Noto Sans only — no monospace, no condensed.
+// `mono` and `cond` are kept as names so the ~40 call sites don't churn, but both
+// now resolve to the one locked type stack. Weight/letter-spacing carry the emphasis.
+const FONT = "'Noto Sans', Arial, Helvetica, sans-serif";
+const mono = FONT;
+const cond = FONT;
+
+/* ---------- 2G Energy Rental logo (official artwork, embedded data URI) ----------
+   Brand rule: never typeset "2G" as text — always use this asset. */
+const LOGO_2G_URI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUsAAAErCAYAAADnmtJGAAAACXBIWXMAAC4jAAAuIwF4pT92AAAgAElEQVR4nO3dP3PbVvr28SseN6hsPW/A/GkrsLF2vL25M05tbeFtzTQGu2gru4vSWdUqHaEmdLsuVqnjmVD9alZqyCpa6hXYqlDmKXBoU7IoAuQ5OAfA9zOjif9IwC2KUsYX7/s+3/zxxx8CmipK4h1JD1e8W8e83TQucIuzLJ1+KlcVAAAAAAAAQvQNYSnq4Ebo2Vv4q8VfP5T0uKKSlrmSdLbw+5l5u/lrQlZUKkrijqQd89bR8hcIPil/fo6rqQwAAAAAgHAQlsK7KIkf6nqAM/99COGna5fKA9RP+hKyjiV9ytLp2ZKPAQoxLzL0Je1KelTyw6+UPxePs3Q6sloYAAAAAACBIixFJW4JRHtqRxi6qXmn6sy8jUWQihWiJO5J2pf01NIlryQdSjqkIxoAAAAA0GSEpbDOBDUdfRn53ZH0wGNJTXWuPEA9Ux6izrJ0OvNYDzwzo/Yj2QtJb7qStJ+l00NH1wcAAAAAwCvCUqxtoVu0py9do3SK+jXvRP38RhdqO0RJvKe8m3TZCxOXykP1+XPjWri+sBe4py/f18uudSKpTzgPAAAAAGgawlIUZsKUnr50ixKM1sM8QB3P/8sodbNESTyS9HLJX79TPj5fOjSPkrivfOfpbZ2qV8oD0+Oy1wUAAAAAIFSEpVjKjNPP3xilb5ZzfQlQx3QI1pPp7h7r9hcu3ikfmZ9ZuE9Py3egfscBUAAAAACApiAsxWc3wlFXOw8RpvmI9liEp7VwR1B6rrzj0/r6hTtG/QlMAQAAAACNQFjaYgtj9T1Jz70Wg9BcSjrWl/CUsf3ALBm9fydpz+XXyxwidayvQ1oCUwAAAABA7RGWtojpROtJ2jX/feSzHtTKiUx4yoFR/kVJvC/phxt//C5Lp/2K7r+sq/XPPD8AAAAAAHVGWNpwpgtsHo7SPQobPnedcrhP9cy6jN9u/HFlQelCHbcFppeSduhEBgAAAADUFWFpAy0EpH1xYj3culIenB4TnLpnAsqZru8MvTUojZL4UPnBbGXMFt5W7q5dEpj+kqXT3ZL3BQAAAAAgCISlDUFAigAQnDpmAtDvF/7oXFLvtk7OKInH2vygtnNJh3ftIjU/e850PcD9a5ZOxxveGwAAAACAyhGW1hgBKQJGcGqZ+X7/340/Xroj1FJYOncpafeOe+1K+vfi+2fptGPp3gAAAAAAVIawtGbM2Os8ILUVhAAuXUkaSRpx+M/6oiQeSXq58Ec/Zul0/473H8vuz4gr5V2sywLTY13fi/zdXR2pAAAAAACE6L7vAlCMOdSlr+thCVAHD5SPjn8fJfGlpEPlwSmHABVkukoXv/fnj2NZ55L2lvxdR/lBcLu6PlI/90B56L1sD+qeroel++b9AQAAAACoDTpLA2YCkr55e+SzFsCBX5SHpozpr3DLrtKVXZtLOktPsnTaW/FxD5UHnd8veZe/Lfua3dL9yu5SAAAAAECt0FkaILP/r6/rXVpA0zyX9Nx0m46UB6czrxWFq7/w6yuX4+2m43fPvFhz28+gnvJ9tLfZ1/WwtC9pbK04AAAAAAAcu+e7AOSiJH4YJfFelMQz5QelEJSiLR5J+kHS/6IkHpmVEzDMiyeLY/Gjim69v+TPl43hy4Td5wt/tGuxHgAAAAAAnCMs9SxK4o4ZXZ1J+qcYt0e7vZT0W5TEZ1ES930XE4jejd+PqrjpBodxjRZ+/YDwGwAAAABQJ4SlnkRJ3DM7Bf+nPCC67UAVoK0eS/o5SuJPURLvmz2abdVb+PXlBiFmVW6O6Pd8FAEAAAAAwDoISysWJXHfjNr/pq8PXwFw3QPlI/ofzYh+x3M9Pjxe+PW4qpveEVDP7vo4M4p/tfBHS8f2AQAAAAAIDQc8VcCEDrvKdwAyZg+s56Wkl1ESv5N0WIMOy43dMsI+rvD2y/aNFnncz/TlxSDCUgAAAABAbdBZ6pA5tGlfeSfWzyIoBWx4Kem/URKPW7APs3Pj97Mqbmoe18Mlf31zzP4244Vf83MPAAAAAFAbdJY6YDpJ98wbu0gBN54qPwzqRNJ+lk7HnutxobP4G5efowlIO8o7Sp8vebefzJh92Ws/zNLpp7WLAwAAAACgIoSlFhGSAl60ITS15WmUxH+s+bHnWTrdK/i+Y+W7Zud2VO0KAQAAAAAA1sIYviVREveVj8j+IIJSwId5aHrc0oOgXHonTrUHAAAAALQAnaUbMiHpvtjLB4TiuaTn5iCo/XXGxiFJulTeDTqiWxcAAAAA0BaEpWtaOADlsedSANzupaSXURL/KOmQnZmSpCt9fZr9Q93+c2yWpdO+84oAAAAAAAgIYWlJZrx3pHzkF0D4fpC0FyXxfpZOl53w3hZnWTrtLf6B2bU809frQ55GSbyTpdOb4WoRnZv3XeMaAAAAAABUjp2lBUVJ/DBK4kNJ/xNBKVA3DyT9M0rimekKr4vZ4m+iJN6xfQPTcbssRC56oNNNnVvuAQAAAABA8AhLC1g4vOl7v5UA2NAj1esQqNmN33cc3We05M9frvk4LYa6l2t8PAAAAAAAXhCW3iFK4p0oiceSfhYn3ANN8lzSWZTE+74LWeHm+HrPxU3MIVjvlvz1Ot2li2HpbI2PBwAAAADAC8LSWyyM3P9XjNwDTfVA0g8hj+ab8fXFzsyew9stG8Xvm72mhZhO1EcLfzTeoCYAAAAAACpFWHpDlMS7yru5GLkH2mE+mj8qEwpWaLzw68eu1geYg5xObvmrByrXXdq78XsOdwIAAAAA1AZhqWG6SY8l/VvXu6IAtMNLSTPzgklIjm/8vu/wXqMlf17mntcevyyd3qwfAAAAAIBgffPHH3/4rsG7KIn3JO2LvaTLnCjfO7j4JknK0un4tg8w3W8d89uHyncYzv+7Ix5rhO0XSXtml6d3URJ/0pfvmcssnXYKfMxYX68ROcnSaW/Fx810+wtG32XpdLTiYzuS/rfwR79k6TS08BkAAAAAgKXu+y7AJ/MP+5HYS7roUnkn25mk8bphkfm4xY+91l1mxp17C2+P17kP4MhzSb0oifdWBYQVOVbe+SpJj6Ik7jus61DSP2/5830t7zxdfJ9Fq94fAAAAAICgtLaz1IzajkSHoySdK38sjn110pnwdNe8PfdRA7DEL5L65rAlL27p2FzZXbpBZ+lD5S903Paz8a8ruslL1QgAAAAAQGhat7P0xm7SNgelV5J+kvR/WTrdydLpoc+R4yydfsrS6ciM7G5J+oeunwIO+PJcnneZmu/NxcOXHkVJvO/oXp+0vCP0rnservg9AAAAAADBa1VYGiVxT3nHVJs7F68k/Sipk6XTYHYyLjLB6aHpSvtOhKbw74Gkf0dJfGg6L324eSL9XpTEO47utSzofHrbPU2QvPhz9VKM4AMAAAAAaqg1Y/imC+sH33V4dKU8ADn0OU68riiJ+8rrb3M3MMJwrnws/6zqG0dJPNKX3aXzWnq3fU9HSXyo/DC1RWdZOr0Zui67177yfcI3HWfp9HDh/TrKdxwvfm/+LUunxzc/EAAAAACA0DU+LDX/kD9Wuw8QCupk73WZjr59Sd97LgWQpH8shoZVWLJP9F2WTvtV1nGjnrGu/3xduRcVAAAAAIBQNTos5RAnXSkPSUe+C7HJrFMYSXrktxKg+sOfzPP/txt/XHlguiQovVK+4qN23esAAAAAAEgN3llqRlDbfIjTfDx35LsQ28xp3Du6fuAN4MNzSWcOd4d+xTz/f7zxxy/NiH4llgSl0pKVAAAAAAAA1EXjOkvNP+KPJT31XYtHlXe7+XLLDkfAh8q7uJc8951/75tg+Fhfd3Z/18QXZwAAAAAA7dKosPSOf8S3ibf9hb6Yw59+9l0HIOmnogco2bAkML1UHpiOHdxvT9I/b/krglIAAAAAQCM0JizltHRJLQxK5whMEZATSbtVdXbf0V39TtK+jYPdzJ7UQ91+UB5BKQAAAACgMRoRlpr9pG0/Ib21QekcgSkCcqk8MD2r4mYrfga+k3RYthaz0mRXUl+3rzW5Ur6jtJLPEQAAAACAKtQ6LDX/mB8pP2Slzc6zdFrZATMhIzhHQK6Uj8MfV3GzKIl3lf88XNZdf6l8TclY0uxmyBklcUdSR/nhaT3d/XO1NXuRAQAAAADtUtuw9I7TmNvmUtIOocUXURIfiwAd4ahsTN38XDyUu0PPLpUfZFVJAAwAAAAAQNVqGZaag5zGavd+0rk/MwZ7nQmMztTug74QlkrXZJgdo3uy96LBpfJR/kNL1wMAAAAAIEi1C0sJSq/5B+HF7czz5L++6wAWVL5X2IzW7ynfPVr2xYMr5WP7x3SSAgAAAADaolZhKQf4XHOSpdOe7yJCFiXxvqQffNcBLDhXfihS5WszTHDaU76XtLfk3WbKu7LPsnQ6dl8VAAAAAABhqU1YSlD6lf/L0unMdxEhYxwfgfIWmAIAAAAAgLvd811AEQSlX/mRoHQ1E0bt+64DuOGxpLEJ8wEAAAAAQECCD0ujJB6JoHTRpfLTrlGAOYX8xHcdwA2PJZ2Z3boAAAAAACAQQYelJih96buOwOwzvlsa4TJC9Eh5hymBKQAAAAAAgQh2ZylB6a0us3Ta8V1EHUVJPBO7SxGmK+U7TM98FwIAAAAAQNsF2VlKULrUvu8CaozuUoTqgegwBQAAAAAgCMGFpQSlS11JOvZdRI2NfBcA3IHAFAAAAACAAAQVlkZJfCiC0mVG7Cpdn3nsfvFdB3CHeWD60HchAAAAAAC01X3fBcxFSdyX9L3vOgIW1Bh5lMS7knqSFjvhZpLOJI0D3b94LOm57yKAO8wD0x4vjgAAAAAAUL0gDngyQenPvusI2EmWTnu+i5A+f632tfqwpBNJ+1k6HTsuqTDTsffRdx1AAefKD30iMAUAAAAAoELex/AJSgsZ+S5A+rxP9mcVO1X+qaTfzGqFIJjg6dx3HUABj8VIPgAAAAAAlfMalprDTIIJ0wLm/WCnDQ7e+j6kwFQBPJZAQY/Fz0cAAAAAACrlLSw1QelY+Y4+LPeL71HcKIn3tNnBW99HSdyzVM6mQtylCizz0rxQAQAAAAAAKuAlLDWjpSMRlBbhtRPSfK32LVxqZOEaNhCWom5emnUlAAAAAADAMV+dpWPlI6ZYbez5/oeyE2o/ipJ418J1NpKl05mkK991ACX9HML3DwAAAAAATVd5WGpGSglKi7k04Z4Xpqt0k/H7m0IJe+guRR2NzPoSAAAAAADgSKVhqYXdl23j+zCivuXrhRKWznwXAKzhgaRj8yIGAAAAAABwoLKw1Bzw88+q7tcQvjsg+5av9yBK4o7la65j5rsAYE2P5P9FFAAAAAAAGquSsNQEZPwDv7yxrxubr5mLdQkdB9cE2uRplMT7vosAAAAAAKCJquosPZadQ4LaxOu+UoUzMu/C2HcBwIZ+4MAnAAAAAADscx6WRkl8KA50WofvEfyeo+t2HF0XaJtRIGstAAAAAABoDKdhqel8+t7lPRqMsBTAXR6I9SYAAAAAAFjlLCw1HU8jV9dvAW9hqfnauVqbMHZ0XaCNHpvufQAAAAAAYIHLztKR2FO6iZnHe+94vDeAcr6PkrjnuwgAAAAAAJrgvouLmpOan7q4dltk6dTnGL7LsPSTw2sjd6k8bJ+/Sfnjvuo51dGXNQmdhbdHFmuDG8dREneydMr3FwAAAAAAG7AelkZJvCPpB9vXbZlzz/d3FpZ6DoGb6Fz5aoMzSWeuHl/TudhRvsu2JwLU0DxQ3s2/67kOAAAAAABqzUVn6cjBNdvGd3fYQ0fX9R0CN8Gl8kN9xpLGVXUSZul0bH45kj7vte0pD+eeV1EDVnoeJfFulk459AkAAAAAgDVZDUvN+P1jm9dsKd/dl646S8eOrtt0V8oD0sNQOnOzdDpTHpyOoiR+KKkvaU90nPo2YhwfAAAAAID1WQtLGb+3ynfQ4epgrrGj65bV8V1AQZeS9iUdhxx+mdoOJR1GSbyrPDRlZ7EfjOMDAAAAALCBexavNbJ4rbab+bqxGa924Sqg8eCO7wJWuJT0XZZOO1k6HYUclN6UpdPjLJ32JP1N+eeB6j03O2YBAAAAAEBJVsLSKIn3xPi9TTOP9+44um4oQWnIrrQQkvouZhMmNO1I+tF3LS01X48AAAAAAABK2DgsNf8g39+8FDTcyHcBC1ztZN3EL5JqH5LelKXTfUl/Fl2mVXukfB0CAAAAAAAowcbO0kO523HZSgsnj/vgohvt3PPndFNIHXdXkvoBrSiwLkunZ2an8UjSc8/ltMkPURKPzGFcANBK0aC7JenJLX91kQ0nF1XXAwAAgPBtFJaavXgv7ZSCQLjoujx0cM1NhHL40Lmk3TaEWWbv6m6UxCPxM6NKI0k9zzWUFg2625K2fdexTDacfFjn40p8Xh+z4eR0nXu4FA26z1a8i7XwqanPAcn553aaDScfHV07WOa5+UTS1o3/rvq4+S8/Sjpd+O+F8sdy4+dzge8bKcDv+WjQnT+OdwmubgAAABs27SwNLQRDeC5DGi13eIBVWe+ydNr3XUTVsnTaj5JYIjCtytMoiXdr2Ln8QtJb30Xc4Zs1P67w5xUNut9uEsg58uuKv38j6cDSvZr6HJAcf24LAeA8/Ptg/nvalGDLBM4vJD0zb5vaWrjOi4X7zB+/U0kf1nz8Xkh6teJ9PkaD7p9CCbrN4/ufAu/6RvljAwAA0Chrh6VREvfFoU5OeD7JumP5eqHtTQxhX2krg9I5AtPKHYoD1uoojQbdv4QSnqCW5p2Vn8NEE/69Vx78vfdS1ZrMOP08eFzZNWrJ/J4vTA0Xyh+/9yWC0wOtDku3zPvYerFhU68LvM9FNpyEUi8AAIBVa4WlHOrk3G++C7DkJMCONt9h6T+ydNr6jmwC00o9ipJ4j+dd7WwrDyze+C4EjTIP5V6Z4PRA0lHIobwJSV8p/35YNRbu2vz78rUJTo+04vHLhpOLaNA90OoA8m006L73vUfVdJWuCnelcIJdAAAA6+6t+XF7yk9bBu4SWlep5Hd/4zsCqy9Md+257zpaYt+8yIV6eW32BgIubClfB/B7NOgW6SSsVDTobpm6fldep++g9KZt5XUVWQNwoHwVwiohfB2KdpUeOa8EAADAk9JhqfkHd4ghGMLyY5ZOz3wXscg8d30d7tTq0fs77Eq68l1ECzwQP7frKvVdABpvS3lX439MV6F35lCk/yjMkHTRRZF1BqbztEgn5iufXwPzuBfpKk1c1wIAAODTOp2le8r/4Q0sc56l033fRdyi5+m+JwSlt8vS6UxS33MZbbFHd2ktPQmx6w+N9ETSf3x3M0eD7lvlh4kFEdyuUKa78kjhd5cWufeHAA+fAwAAsKpUWEpXKQrq+y5giV0P97z0dN/aMHttT3zX0QJ0l9bX61A6/tB4W5J+9RGYmrH7/8huWHiq/DT7ZW+b+KgSYWno3aWmq7ToSgEAAIBGK3vAE12lWCW48fsFPkLL3SydfvJw37rpS/qf7yJaYC9K4sOGPCcvzFsbbCkfx//WdyGBafJzoGyYt60vnZiLv17HPDD9U1UHP5lw9ldtNnI/f8xOJZ2Wqd0EhU+UP27PVOzxe1/28cmGk4No0H1V4PpvJf29zLUtKBJSv6erFAAAtEHhsJSuUhRwEuj4vaIk3lX1QX/IwXFQsnQ6i5L4naSXvmtpuHl36b7nOmw4yoaTNnU4PYsG3VccqnJNk58DHzb93BYCwCeSXpT88HlA7zyw2zAo/SDpvdYILheZAPBzCGg6O1/o7sdu3a/PgVbvIn4RDbrPqgomS3SVvnFdCwAAQAjKjOHTVYq7hD5uXnVtoe5tDdm+7wJagt2l9fU2GnRDPuwGAcmGkw/ZcHKQDSd/l/T/lAddZQLFFyZEc2aDoPRI0p+y4eTbbDg5st0Bmw0nFzceu0R5KDv3IRtO1upqNi94nBZ41yp3l74t8D5H637OAAAAdVM2LAVuc6WAx81NMFR1x2K/4vvVnjns6Z3vOlrggXh+1tW82w8oJRtOPppO1T/peui3irPAzgT//1K5oPRU0rfZcJJUFdyZx+7IBKd/Uh46b9rRXKRD85nrsFqSzFqAVTtqi+5bBQAAaIRCYWmUxH3RVYrl9gIfN+9XfD/G79d36LuAluDFrzAV6Y5z3u2H5jLB399V/GCiZw4Pe/qXyu1WPciGk7/43Jm50HG6UQ03x/7vUEV3aZF7HNBVCgAA2qRoZ+m+yyJQaz9m6XTku4gVqgyGrkTgtzYTMp/7rqMFHpkXwRCWovshU8bxsYlsOLk5Vn6XsvtOV4oG3dcqtiNzLsmGk6btyyzSqem0u7TgYVMfVTxcBwAAaISVYWmUxD1Jj9yXghp6F/peThMIVfn83Qt1HUGNjHwX0BJ93wXgOtNtViRA2Va1+wzRTIkKdjPbvKnpVC2yI1PK6/tLEw82M9/vRQJrl9/rRbtKre6EBQAACF2RztK+6yJQS79k6bTvu4gC9iu812UNumzr4Nh3AS3xNEriju8i8IXpFj1QsQDrtcPxaLSACcCKhJDb5nR4W4oGpZL092w4KXIYUl0V3V36yvaNTXfvqq/rhdl1CwAA0Cp3hqXmH9JVH4yD8J2rBiG6h67S/Qrv1VjmoCdG8avB7tKwPDEBVlLw/TnsCZsqOopvJSw1oV/RsfLE537SKpg9oEUCa6vdpeaFmUJdpTbvCwAAUBerOkt3K6kCdXIuqRf6qHmUxA9V7e5QukrtGvsuoCX6vgvA17Lh5L2KhVhPTHcYsBbTtVmkk9lWF3PR5+tRE0fvlyi0esNyd+krSav2Hl+06GsAAABwzaqwlK4jLKpFUGrsSXpQ4f041Mmuse8CWuIBBz0F642Kj+PbHJFG+1Qy5l7wMCFJulCx8fRGMN2lRT5fKy+MlOgqLdrhDgAA0DhLw9IoiXfEwU74ojZBqXnu/lDhLa/EoUS2jX0X0CJMEATIBChFOs62xDg+NlMkLF3VhVhE0c7INy08UOhIq18csdVdWqSr9EPTVyAAAADc5a7OUrpKMVeboNQYVXy/45AfmyiJd6Ik7kdJvH/jrR/qAT/m8bz0XUdLPA/1edBC10adzcEqRQKLZ4zjYwPOx/DNYWRFrvHBrKFoFRMOF3lx5LXpDF0Lu0oBAACKuX/H39FtBKlmQWmUxPuSHld82+BG8M3O1j3lOynv7BCPkvhE0n6WTsfuKyvlTHS3V2VXAT6PISkfhf29wPu9jgbdoxZ25KEeinZEtjmkO1IeZN4Vhm4rfyzXfZzerri+JL2nqxQAALTdrZ2lURLvqtp9jwhT3YLSnqodv5ek8yydnlV8zzuZNQRnyh+LImHjU0m/RUkcWlgW1OPacH3fBeB2JfYZMo4Ply42/PgXBd7ntM0hnXmho9Du0nW6S81u4yKhdWv2xQIAACyzbAyfrlK8U72C0ofyszc0qIDRHNbzX63Xkfl9lMQjqwVtZua7gBZ5zCh+uMw4fpG9ki+iQbdIKAUsKnro0lqiQfeZiu08bf3J6+b0+VWP9ZaKd+ouKjJ+f2ReoAEAAGg1wlLc5l2WTvt1CUqNY/kZ2T72cM9bmc7anze8zEvTWR6Cme8CWiaUrztuV7Tb6+0mOw3RSkXC0k08K/h+rdtVuoT13aUFu0qL7k0FAABovK/CUhO4MILfXj9l6bTvu4gyzJ7Spx5u/S6UQNl01toKbkfmemgXwlL/loZKZjy5SJCxrWIdZMBckYOXinQ2L1MkLP3Avt2c6S5d9XiX7S59W+B9DugqBQAAyN3WWco/mNvruyyd7vkuogwzdl71ntK5YLpKla8DsPUixwMFsMMywAOnmu4pIXnwDlRsHPq1GX0G7mROqS/SobhJWFokjG3trtIliu4uXdkVbH4WrFrP8VGsQQAAAPiMsBRz32XpdOS7iDLMQUa+doZeZek0iLDU7Jp8afmyfcvXQz30fBeA5UocACMV6yQDinQnnq7b9VkitN8kjG0c00m+KkDeUrEu8iLvc0BnLwAAwBfXwlITuvjY+wh/riT9tYZBaUfSWP5WRgQRlBouuoEf02XYSrxYFrhsOHmvYrsdn0SDLuP4WMrsvCxyINgmu0QL7UM14SCuK7J249Vd3aUmrF4VWF+YQ+QAAABg3Ows7fkoAt5cKT/xfuy7kDIW9nP63K0bUljad3TdHUfXRbh6vgtAIYnysdlV3hYZ00VrpSo2gr9JWOp6xL+xTIBc5LG/60WRQl2lxSoCAABoD8LS9poHpWe+CynDBKVjSY89lhHSCH5f7kLjnqPrIlyPTNc2AmbGZYsGHKnLWlBP0aD7SsW6So82PPSnyL5SDhVarsjajVu7S0t0lbKrFAAA4Ib7N37f81EEKneuPCgN4iT3ko7lNyid1xAKxqZhW0/SyHMNRbyNBt2q93J+G8q4cDacHBQMQ55Fg+7rho7Ztvo5sC4TlBYJ0cvsyF2GztINZMPJRTToHmn1btnXyjvOFxX5Gt/8GAAAAGihs5R9pa1R26A0SuKRpKe+61AgYanpsn3uuw40Ts93ASisaNDx2uynRItFg+5WNOj+S8W7jRMO/QlC0d2ln184MYH4qhUcH+oe/AMAALiyOIbf81UEKlP3oNT2ie/rCGYEX3zPwo2e7wJQjBmPLtL5tyXG8VsrGnSfRINuKul3FRu9l/Lx+012lc6t6nyWiu3fba0S3+evl/x6mSZ2mwMAAFixOIbPYS7N9oukPkHpxsa+C1jACD5ceBQl8cM6/qxoIzOO/0Krd0O+iAbdF5YCMAQqGnSfKA/HnyjvLHymgifSLzjKhpMqx7Od7yw1nZYuu6tPHXdpHikPQO/6HJ6Z7tJtrf6av6erFAAAYDnC0nZ4l6XTvu8i1hFYUCoFMoJvEJbClR2F9cIA7vZG0q8F3i+NBt0PjFbXgo99rFL1QWlVXqhYl+u63khyFj5mw5CyXmkAACAASURBVMnHaNA9kLTqOfFaxcLxTXfRAgAANNriGH4IuyBhH0GpXUGEpVES70h64LsONFbPdwEoznSIFRmp3VKx8Vy005uGBqVNcaTVKwuKdBIfmdF+AAAALHFP+hy8oHkISu06D2g0uee7ANeiJO75rqHF+H9C/Ryo2Djz68WDYADlHZF/yYYTdlgGzHSEb9oR+lHsKgUAAFhpPobPP4ybh6DUviC6So0qRvBnFdwDYarD/xMuVMGuwxuCHV83Y7pvJP2rwLunkv7kuKQq8BzYzIWkg2w4OfJdCIrJhpOjaNAtOmp/mwO6SgEAAFabh6Udn0XAuloGpVESP1S+J/Gx51KWCSksrWJtxqyCe9zloef7t9kj3wUUcEQn3HXZcPI+GnTfa/WJ59vRoPu6AY8fz4H1fFB+wE8oIekTOdz32UAHyl/wKOuj8lF+AAAArDDfWdrzWQSsIih14ypLp2e+i5BaNZ5eh+7GxmrR86xpEhXrfnxrTk5Hu3zIhpNvKwxKCUEtM1+7dR7XAw53AwAAKGYeltLB1QwEpe6E1FVaSYiYpdNxFfe5Az+X/OLxryEThhTttvRx2jr8ehYNuq98F4GNle2ovqALGwAAoLj5GH7IIRWKqWtQuqM8KA39ZPex7wIW9HwXUBE6S/3aUVgvEqCgbDg5MIc4rTrI6VnJcfwLrb8rEeV80Hrdg0W+7m+jQfd9QF2Gz+T+0KH3Wr/LdVtSUAFzNpx8iAbdD1r9tZ4jKAUAACjhfpTEHd9FYGMEpe6NfRewoFfBPU4quMcqdDb6xeNfb4mk3wu832sTnBU59IWwtDof1ukEjAbdI+Vf96073m1LeVdxsmZtZRQJ9O6q1YpN1g6YFx6CCkuNAxULSy8C2k8LAABQC/fE4U51V9egtC/pv6pHUHqZpdOZ7yIkyby4UcVjNqvgHqvQ8e4Xnb01ZsLPNwXedR6coQFKrGF4ZULAELA7dw3ZcPJBxQ5sKvJzAAAAAAvuie6hOqtrULon6WffdZQw9l3Agl5F95lVdJ9b0fEeBP7fUHOmM/G0wLu+iAbdF67rQTXM171Ip3AVIXmR5584bGxtRb7OoaxbAAAAqI17onuoruoalI4k/dN3HSWNfRewoKrv13FF91mm4/n+oLO3KYp2laXRoOt8HBqVKTJi/yQadF87rqNQWKriuzcBAAAA5+6vfhcEqHZBqTnxfiTpuedS1jH2XcCCXkX36URJXNW9btP3eG+gMcxBMAeSVoViW+Z9GNltAPN1fy9pVcfw62jQPXJ12FM2nHyMBt0iu27pLAUAAEAw7osOrro5r2lQOlY9O9WC2VdqVPUY1mlNAhyJkrgT2PMf6zlQHpqtCqxeR4PuB7MLEfX3RqvD0ioOezrV6ucenaUAAAAIBgc81cu5qusstMKceD9TPYNSKaCuUs+dnminju8CsDnTNVg0DEtd1oLqlDjky/VhT0VG8bfYmwsAAIBQ3PNdAAo7l9TL0ukn34UUZcK9sepx4v0yY98FLGC/MIC1mG7R9wXedfuOPZYcFFM/Ryr2dXN52FOR551EdykAAAACQVhaD1eS+jULSvuSflO9g1KJsBRAcyQqGJwtOZ286GE9CITpKi7SXerssCfT4VrkufOKQ8YAAAAQAsLS8F0p7yg9811IUVES76sZOy9D21dKWApgbSWCM4lx/MbIhpMjSUX20L6OBt1Vu0XXVbS79JWj+wMAAACF3ZP01HcRuNNezYLSkaQffNdhSWiPe133vqK+er4LgF0lgjNnnYbw4qDA+8wPe3KhaFj6mu5SAAAA+EZnadh+zNLpyHcRRURJ/DBK4mNJL33XYtHYdwFzHO4EwKKi4/guOw1RIbOz9qjAu75wcdiTGcUvEphuSSKkBwAAgFeEpeF6l6XTfd9FFBEl8UPlweJzz6XYNvZdwAJG8AFYYYKrop2GjOM3x4GKheSuvuZFwlopD+lv25kLAAAAVIKwNEznkvZ8F1FElMQd5aFi40bEA1t/QFgKwJpsODlQsUN3nkWD7gvz6wuHJcGxEiH5tosVDKa7tcgKCEn6F+P4AAAA8IWwNDxXknazGpx8HyXxjvK9no0LSiWd+C7gho7vAgA0TlLw/VITXBXpSkTATEheJPR2tYKhSFgrSduS/uXg/gAAAMBKhKXh2Q3sBPZbmaB0LOmB51JcCamrVOIgNgCWZcPJqfwf/IPqvSnwPk6+5iW7S59Fgy5rIAAAAFA5wtKw/Jil07HvIlYxhw2N1dygVApoX6kJpgHAhaKdhq8kWT/4B9XLhpP3KhZYvlhYwWBT0QPGJOlVNOimjOQDAACgSveUj33Dv5M6HOgUJXFf0m9qdlAqhdVZSlgKX2a+C4Bb2XDyUcXH8TmlvDmKfs3f2g4qS+xOnXsl6VcOfQIAAEBV7imsUKitriTt+i5iFROU/uy7jgpcBbYKgbAUvsx8FwD3zGj0e991oDplDntSHlbavv+Byj3nnigPTAnsAQAA4Bxj+GEI/kCnFgWlUngvIBCWAnCtzGg0muFAxb7mbx0d9pRIOi3x/lumlt+jQdd6gAsAAADMEZb691Poe0pbFpRKAe0rNTjcCYBTZhy/yME/aAjzNS86Dm/9oCVz/29VPqTflpSa0PSty/F8c2129QIAALTMfd8FtNylpH3fRdylhUGpFFBnKYc7AUu9jQZdLye0Z8PJNz7u61o2nByZA33qEg7xHNhQNpwcmK/5qsDxWTTovjCHQ9m8/8do0P1W0r+Uh6BlbCvfo/s6GnQvlB9adaG8W/XUhLGFmM7ZbeWPw5b5b12+DwAAAGDZfeXBEJ1rfvRDHr9vaVAqBRSWihF8eBR61zucSCT9R3lghHZ4I+nXAu/3Nhp0P5QJIYvIhpPTaND9i6lh3S7Rr3arRoPu/Jcf7vgYF+sFAAAAUHP3JAUb1jVc0OP3LQ5KQzvcqeO7AADtscZJ5ai5Egd8OTnsydQwH8l3cdDYsyVvBKUAAAC4FWP4flwp4PH7FgelUlhdpZLUK/n+l6r3CeZ0uYfjyncB8KPEaDaa443yAHFVR/G8u7TMwUyFmMD07+bE+9cFagEAAACcuK/8MJsfPNfRNnuhjt+3PCiVwjvcqewY/ihLp/suCnEtSuKepN9814HPQnvhANWaj+OjBbLh5CIadA8kFdkB+1Z5F6irWg6iQfe9uc8LV/cBAAAAlrnnu4AWOsnS6ch3EbchKJUUUEAUJXFH0oOSHza2X0ll2M8KBMJ0DjKO3y5Hyg9IWuVZNOg6Gcefy4aTi2w4+bvyUHbZztEQfFT+uIVcIwAAAEq6F/LezIba913AbaIk3hVBqRRQWKr1wsOZ7SIqRFgalrHvAuDdgYqFZ2gAMwZfNCB/Gw26zsfks+HkQzacfCvpL8pDSauHS63pg/K1Bd9mw8n/y4aTxMVaAgAAAPjDztJq/RJiOB0l8Y6kke86QhDY4U5lw8PQDqcqq+O7AABfZMPJx2jQTVTspHQ0QDacHJl9tc9WvOuW8r2ib9xX9bnTOZGULOzTfSH3hzSdKn/B4FTSqTkMCwAAAA33zR9//KEoicfiYJUq/F9oYZYJSscqP+7dRCdZOu35LmJuje/LoOovK0riP3zXgGv+GuKLOwAwZ7pbn5i3+a+18Pu7LAafF/rSRX0q6SPdogAAAO017yydibDUtXcBBqUPlXeUEpTmQhrBl8p3lo5dFFEFE9ojLDPfBQDAXczqgA9iZygAAAAsmh/wNPNZREsc+i7gFmNJj30XEZBgwlITZJcNsYOpfw2EpYEJ7cUdAAAAAACqMA9Lxz6LaIGTLJ0GFWRFSTwSQelNM98FLFgnPAzqOVYSYWlYTnwXAAAAAACAD3SWViOortIoifuSXvquIzSB7Wfslf2AmncCEpaGZea7AAAAAAAAfLgnfQ5ZrvyW0liXWTo99l3EnNkNGVR4G4hL3wXcUDY8rHsnIDuTw1LnLmUAAAAAANZ2b+HX/OPYjWCCSQ50ulNoz/+yYWlo9RfG4U5Bqu3zCQAAAACATSyGpWNfRTTcyHcBC/bFntJlggmHTKj9qOSHBVP/GghLAxPYSgoAAAAAACpDWOrWL1k6/eS7CEmKkrgn6XvfdQQspLCxbYc7dXwXgGvqvtIBAAAAAIC1MYbvVjC7ShXQOoBAzXwXsKBX9gOydFrn79+e7wJwTZ2fSwAAAAAAbOT+/BdZOv0UJfG5GNO25SpLpyPfRUhSlMQd5cFtSOGtDX2VH1e/VWBhY9nO0nMnVVSHMfywjH0XAAAAAACAL/dv/H4swlJbggkms3Q6U76vtFGiJO5bulRoYWOn5PuHFPSWYoJ8DhwLy9h3AQAAAAAA+HLvxu/HPopoqLHvAppszUOQlplZuo4tZV+wqG1YKrpKQ3Meyp5lAAAAAAB8ICx1J5jO0oayGbIFEzaag7jKCqb+NRCWhoWfWwAAAACAVrsWlpqOIk5C3twJ3VnO9SxeK6SwsXR4mKXTsYM6qtLzXQCuGfsuAAAAAAAAn252lkp0FtnAY+iezY7EmcVrbYrDneDLVc2DdwAAAAAANkZY6sbYdwEtYC1ky9JpnTtLZy6KqAKHOwWHn/0AAAAAgNb7Kiw1J6fXvVvNp6vAwrfGsXy406Wl69jSpsOdOr4LwDWEpQAAAACA1ruts1SiM3ITY98FtEAjR/DXPNxpbLmMKvV8F4AvsnRKWAoAAAAAaL1lYemoyiIaps6dfnXRs3itscVrbWqdELjOzzf2lYbjne8CAAAAAAAIwa1hqRkjZxR/PWPfBbRAIztLVX4s/TJLp59cFFIRwtJw0FUKAAAAAICWd5ZKdJeuq86dfnXR1LC0TYc72dw7i81cMYIPAAAAAEDurrCUfzyXd17zTr/gOQjZQgq3n5Z8/7GLIipCV2k4+FkPAAAAAIBxf9lfZOl0FiXxL5KeV1hP3c18F9ACNkO2q1DC7SiJ1/m8foiS+IcyH5Cl02/WuI8LPd8F4LND3wUAAAAAABCKuzpLJTqOygqpS7GpehavFdLXq4pOy5D2ENNZGoZLs6MaAAAAAABoRViapdORpKtqSmmEse8CWoB9pesLKRQjLA0DXaUAAAAAACxY1VkqcdBTGTPfBbQAYen6QgpLOdzJvyvx8x0AAAAAgGuKhKV0HhWUpdOZ7xqazMHhTjOL19pUa8LSKIl7vmuAJOk4lJ29AAAAAACEYmVYagLAX9yXUnsh7YNsKtuB4szy9dYSJXFH0oMKbhVEWCpG8EOx77sAAAAAAABCU6SzVKK7tAg6tNzrWb7ezPL11tWp4B6XAXUREpb6d0InPAAAAAAAXysUlmbpdCzpxG0ptTf2XUALWA3ZAgqLehXcY1zBPYoiLPVv33cBAAAAAACE6H6J9x1JeuqoDqAImyHbpcVrbao1+0qNx74LaLlz8wJYcKJB95WkLce3OV349cdsODld+p4Vqejz3sRpNpx8WPVOFXwe77Ph5MLVxaNB95mkJxtc4mM2nBzdcf3Qv85l3Pm5FhENur/aKmaJD9lwcuD4Hp9Z/PoW+n4DAACAO4XD0iydjqIk3henWC8TUhjVOA0/3KlTwT2CeH5yuFMQQl6r8kLSsypvGA26kvRReYh6KulCeVhRZYha+edd0htJRcIb15/HtqTE4fWfSHq7wcd/kHRXgBj617mMVZ/rnaJBt4rHYltSZWGp7H19i36/AQAAwJGiO0vn9l0U0RCh7INsKtvdlyF9vZx3WgbUScgIvl+XWTod+S4iQFvKQ47XklJJ/4kG3d+jQTc1oQ7C8Mp0f6L+qvg6bkeD7iadwgAAAGipUmGp+Ud2SOPLIQkpfGuinuXrhdJpWUV4GNK+YcJSv/Z9F1Aj25JeSfqXCU5fR4NuU0ao6+y17wJgRVUvQhCuAwAAoLSynaUS/9i+VZZOgwjfGqznuwBHOhXcI6TnZsd3AS1GV+n6tpWPZ/8eDbqEdX49o7u03ky3dlUvPNAZDgAAgNJKh6V0l8IT2x2JM8vXW1cVnZbjCu5RFIfE+bPnu4AG2JL0Nhp0/8N4r1cE1vVWZdj9JBp0tyu8HwAAABpgnc5SSerbLKIBrnwX0GRREnckPbB82Znl662rNWFpRSsHcLuTLJ0e+y6iQZ5I+pV9pt7QXVpvVX/t+D4FAABAKWuFpeawmJD2IPoW0phzEzU5ZHvo+PrnWToNZZ9uk7+Oodv3XUADbSnfZ/rKdyEtRXdpDZmO7Ko7PQlLAQAAUMr9DT52T9J/bRVSc50oifd9F9FgPQfXnDm45jpcj6WPHV+/DMJSP34xL3DBjTQadE+z4eTUdyEt8ywadJ9lw8kH34WgFB/B5ZNo0N3OhpMLD/cGAABADa0dlmbp9CxK4neSXlqsp64eSfrBdxEoLkunM981mPUCro0ruEdRhKV+sKvUvX9Fg+5fsuHko+9CWiaV9CffRaAUX12eLyQdeLo3AAAAambdnaVze2JfJ7CujusbBLanksOdqvdjCC8MtMC2GAv3YZs1CPXhaQR/jlF8AAAAFLZRWGp2Ie7bKQVonY7j6//i+PqFcbiTF5eSDn0X0SKvOXXbC0Lq+tg0sNykc/sJ358AAAAoatPOUmXp9FDSuYVagLbpOL7+2PH1yyAsrd5eQId7tQXBXfXoLq2PTcPSTffT0l0KAACAQjYOSw124gHlPXR8/ZBG8Du+C2iZk8BWMLQFYYwfhNSBM12dm3Z2brpzlO9PAAAAFGIlLDUnLf9k41pABULZs+uy2/I8sF2VPd8FtMiVpL7vIjz7IOnNjbcD8+cuT63figbdZw6vj9vRXRq+TYPK02w42fR790k06G5teA0AAAC0wH2L19qXtKv8ZHgAfoW2q5Ix/OrsBxaU+/AhG06WdqGZwOSF8o5E23sMn2jzceF1fXB0b5cBsy2vo0H3fTacbLLX0rVNH8ct5c8vG0612Q7Qsp/LxmGp+e8HSZu8IPFC0tGGtQAAAKDhrIWlWTr9FCVxX9Jvtq4JOPLAdwEVCGYEO0rijtrxmIfgxOyRxh1MoHYk6SgadFNJNrsSn2nzceF13RkSN9y28q9jsJ9/Npy82eTjTdfyr5bKeZMNJ5WE+mYEf9OQ11ZY+kyEpQAAAFjB1s5SSYzjAyWdObruu8AO9qGrtBqM368hG04SSe8tXpITt/15zZh1kGzsCj298d91veA5AgAAgFWshqXGvqRLB9cFmsZVoLnv6LrrIiytBuP369uo4+8GwlJ/tmS3Sxh2bBqWflzYV2pjJQQHPQEAAOBO1sNS09HWt31doIHGDq75LsDArOe7gBZg/H4D2XByIbvdpfCH7tKAWBrB/7wuwKzQ2DQw5RA2AAAA3MlFZ+l8HP9HF9cGGsT2GP6Vwusqlegsde1K+eF62EwdDjFqMlsHM9FdGhYbweTN781Nd60yig8AAIA7OQlLJSlLp/uSzl1dH9iEOXTIK9OF/c7iJfdC6yrlcKdK9APbUQus41T2Dt6huzQcLsJSRvEBAADglLOw1NhV3vUEhKbjuwBj39J1fsrS6cjStWzq+C6g4X7K0umx7yIAS2ydZL8l6bWla2FNJrDeOJTMhpObnaSbdpZKjOIDAADgDk7DUtPl1nd5D6DOzPfIpisrfszS6Z6Fclzo+S6gwc4D/roDZW2b3bE2u0s5bMsvG92bXwWjlvaWMooPAACApVx3lsp0Pf3k+j5AScHs0TQrK9b5HrmU9Ffz8aEK5nFuGPaU2mer08xG11sbzYPNN7K3v5TuUr9cjODP2fg+YxQfAAAAt3IelkqS6X46qeJeQEEPfRewyHyP/E15ALrKuaTvsnTaMYephYyw1I3d0PbT1pnpMLMVlnJQ1AZM16CtcfxXdJf6YWsEX8u/n2x8nz2xcA0AAAA00P0K77Wr/PTvRxXeE1im57uAm0wX9nGUxDvKQ8bOwl9/Uv79c1aXw3yiJH4ovt9d+EcNQvK6sXl6+oXFa5X1Khp0re5izIaTb21er6Aj5V2hNsakX0tKLFwH5djq2lzWQWqrs5TnBgAAAL5SWViapdNPURLvShqL07HhX8d3Actk6fRMeTBad3SV2vcuS6eHvotokmjQfSK749rvLV6rrG19GWevnWjQ3c6Gk4tsOPkYDboHkt5auOyraNA9MPtQUR0bXZunptP4K+Y5crrhfbaiQfdFNpz4/J4FAABAgCoZw58zIRAHkiAEdDy61/NdQMOci5+fVkWD7mtJv8pOB6MkHS0Ld1DIYtB7JHaX1pmTw51K/n0RVjuxAQAA0AyVhqWSlKXTkTY//RvYWJTEPd81NBydpfZcSerVZQVDyKJB90k06L6OBt3flXcu2jwRmw41SxzsLiUUq0g06L6Qne+rVXtJbewt5ZAnAAAAfKXKnaWfZel0P0rijqSXPu4PGDvK10LADcJSOwhKy7stHHM9ov4+G05sdLrhC9u7S/n6VMNWMF1FZymj+AAAAPhK5Z2lc1k67SsfKwV86fkuoOFYdWBH36wwQXHbygObxTeXQelHSW8cXr+VLHeXPqO7tDI2ujWX7iudM39vo7uU5wUAAACu8RaWGj0RmMKfnu8CmooVB9Z8l6XTY99FYKU3HCBkxW2BNrtLa8TiCH7RrlEbHaGM4gMAAOAar2GpGSvtKR8zBar2gFDPGUbwN/cPs+MZYTvKhpMj30U0xFchG92ltVPVCP6cjc7SLRPyAgAAAJL8d5YSmMK3Xd8FNBRh6WbeZen00HcRWOkoG04S30U0XTacHEiy1blLd6lbVsLSovt/Le4JJkQHAADAZ97DUkky+/h6IjBF9QhL3SAsXd87s9MZYSMorRbdpYGLBt0nsrMbuGwAaiMwpbMUAAAAnwURlkoEpvDmEaP4Tjz2XUBNEZTWwwFBabXMqgNb3aWppevgOluBo4+wdMuEvQAAAEA4YalEYApv+r4LqJLrcJjweW0EpeH7KOnv2XDCyfd+2Oou3Y4G3VeWroUvbIWlZfeQ2hrFp7sUAAAAkgILSyUCU3jxMkriju8iqhAl8Z6kh45vwwh+eQSl4Xsv6S/ZcGLj9G2swXJ3KbtLLbI4gv+x7B7SbDg5Vf5CxqYISwEAACApwLBUIjCFF/u+C3AtSuKHyj/PT45vRVhaDkFp+C6y4eTv2XBiK6jD+lx2l9o4Wb2tfI3gb/pxi7YZxQcAAIAUaFgqEZiicm3oLh1JelDBfToV3KMpCErrYTsadOlEDADdpcHyNYK/6cfdRHcpAAAAdN93AXfJ0umZ2X84VjUhD9ptXw3dX2rG759LUpZOx45v99Tx9ZuCoLRe3kaD7vvAu0vfZMOJrc7LkB3IziFN29Gg+8oEsFhTNOhuy84IvpR/n721dK11vJDETmIAAICWC7azdI4OU1ToZRMPJ4qSeEfSPyu8F1YjKK0nTlEPgO3u0mjQ3bJ0rbZqUjcmo/gAAAAIPyyVrgWml55LQfMdmt2ejWA+l/HCH7l+0YGwdLWfCEpr6xnj+MFILF1nW9J8d6mNQ4LaqElhqdS8zwcAAAAl1SIslT4HpjuSzn3XgkZ7rIYc9rQQlC6usDhzfFvC0rt9l6XTPd9FtMCbbDj5ZvFN9kZrX5uxY3hkTky3caiPZLpLzanqKMF8LzStE5OwFAAAoOVqE5ZKUpZOPynvMCUwhUvfR0nc913EJhaC0scV35qwdLnvsnQ68l1Ei9ka3d4S4/ihsLWfdUtfuktRThODRUbxAQAAWq5WYamUB6ZZOt2R9M53LWi0w7ru31wRlH5yfHsOd/ralaQ/E5T6lQ0nH2UvXGMcPwAuukstXatNmhiWStIz3wUAAADAn9qFpXNm599PvutAYz2QNK5bYFqgo9TZGH7dHquKnEvqmTUi8MwcDGQzXGMc3z+6Sz1p6Aj+XFNDYAAAABRQ27BUkszuv+9814HGqlVgauqcqfrR+7laPE4VIigNk81wjXF8zyx3l761dJ22aHL35RNeDAEAAGivWoelkmRGW/8s96d8o53mgemu70LuEiXxnqT/6vphTreZOSyj4/DadfMuS6c7Zs8yAmLCtSNLl2McPwy2AnCU0+SwVKK7FAAAoLVqH5ZKkunc2hEHP8GNB5L+HSXxoe9CboqSeCdK4rGkfxb8kJm7atRzeO06+c6sCUG4DiR9tHQtxvE9s9xdigLMftemh4lN//wAAACwRCPCUknK0ulMeVjDwU9w5fsoic+iJO75LiRK4odREo+Ud5OGcqhS28fwryT9lYOcwpcNJxdiHL9p6C6tVhuCREbxAQAAWuq+7wJsMiOv/SiJz1S80w4o47Gk36Ik/kXSngnpKxMlcUfSvqRdrR65v81DR2HvQ61XT1OcS9qt+vmAjRwpP9DHRhjyLBp0X2fDCYGdJ9lw8iEadN+rHSFeCJo+gj/3QgTxAAAArdOosHQuS6eHZjT5WNIjz+WgmZ5Leh4l8YmkwyydHru6kTnhfte8Pd/wcv/evCLc8JM5bA41kg0nH6NB90D2ukJfR4Pue9O1Cj/eiLDUuZaM4M8RlgIAALRQI8NSKd9jak4HH2nzgAlY5qmkp1ESXykP58eSxpt2GJruzx3lqyV4/obpSlLfZVAOt7Lh5CgadF/ITpfcfBz/WwvXWtfbaNB1caL7mzp0zWbDyUU06M47huFOW4JSyYziV/wiiKvv45s+ZMOJz59XAAAAwWpsWCp9HsvfNSeFM5YPlx5IemneZMLTM+UHKs3M+5xJunk6eu/Grx8qH/VH2Bi7b44D2RspZhzfvwMRlrr2xHcBFaO7FAAAoGUaHZbOMZYPDx7IdJ36LgTWMXbfIGbXpc1uRMbxPaK7tBI2O0sPJH2weL25J5JsdWcSlgIAALRMK8JS6dpY/qFM9x8AlHClvJt07LsQWDffdbll4VohjOO3Hd2ljpi1FTa+T+aOXLywEA26F7IXlj6JBt2tbDj5aOl6AAAACNw93wVUKUunn7J0dyN61wAABeZJREFU2pf0N+XBBwAU8YukDkFpM5kQxGbn2LNo0CWs88SEb0e+62goWysrJOnCVQe2ua7Na7dpTysAAEDrtSosnTMHsnSUByAAsMyVpL9l6XTX7EBGQ5k9ozbDlbfm1HD4wdi0GzZDQxfj966ubzMkBgAAQOBaGZZKn7tMdyX9Q3SZAvjaifJuUk67b483Fq81H8eHB3SX2udgBP/U4rVcX/8FL34AAAC0R2vD0rksnR5K2hFdpgBy827SHt2k7ZINJ+9ltxvthQmY4AfdpXbZ7q6sU2epxCg+AABAa7Q+LJWkLJ3OTJcpu0yBdpvvJqWbtL1sdpdKUkpHmh+mu9T217PNbIalp672lc452FvKKD4AAEBLEJYuWNhl+s5zKQCqdSl2k0JSNpycyu74NuP4fh1J4hTzDUWD7hNJ2xYv6bqr1MV9GMUHAABoCcLSG8wu076kv0o691wOAPd+lLRDNykWvJHdgI1xfE+y4eSjGMe3wfbz1/W+0jlG8QEAAFAaYekSWTodZ+l0R3mQwmg+0Dwnkv6cpdN9ukmxyFHAxji+P3SXbs52SFjHzlKJUXwAAIBWICxdIUun+8oPgGI0H2iG+ch9L0unZ76LQZiy4eRAdvcdMo7vCd2lm3Exgm++Js6Z+9jsYmUUHwAAoAUISwswB0D1lY/mn3guB8B6rsTIPcqxfTgQ4/j+0F26vrp2lbq6H9/DAAAADUdYWoIZze9J+k55dxqAeninPCRl5B6FZcPJe9kPWhjH94Du0o3UdV+pq/s9sXw9AAAABOabP/74w3cNtRQl8UNJe+btgedyANzuRNJ+lk7HvgsBAAAAAADhIyzdkAlN9yV977kUAF+cS9ojJAUAAAAAAGUQlloSJXFHeWj60m8lQKtdKu8kHfkuBAAAAAAA1A9hqWWEpoAXhKQAAAAAAGBjhKWOEJoClSAkBQAAAAAA1hCWOkZoCjhBSAoAAAAAAKwjLK2ICU33JPUlPfBaDFBfJ5JGhKQAAAAAAMAFwtKKRUn8UHlouidCU6CoE+WdpGPfhQAAAAAAgOYiLPUoSuK+8hH9R34rAYL1TnlIOvNdCAAAAAAAaD7C0gBESdxT3mn63HMpQAguJY0kHWbp9JPnWgAAAAAAQIsQlgaEvaZoOfaRAgAAAAAArwhLA2VG9PuSnvqtBHDqSl+6SGd+SwEAAAAAAG1HWBo4uk3RUHSRAgAAAACA4BCW1kiUxLvKQ1N2m6KO5rtIR3SRAgAAAACAEBGW1lCUxA8l7SrvOH3suRzgLleSjpWP2Z/5LgYAAAAAAOAuhKU1Z8b05x2nBKcIwTwgPc7S6bHvYgAAAAAAAIoiLG0QglN4REAKAAAAAABqj7C0oQhOUQECUgAAAAAA0CiEpS2wsON0V1JP0gOvBaHOziWNlR/SxA5SAAAAAADQKISlLRQl8Tw07YmuU9ztSnk4OlbeQTrzWQwAAAAAAIBLhKUtZ8b1e+ZtV3SdIu8ePZY0ztLp2HMtAAAAAAAAlSEsxTVREu/oS3jaE+FpG8xH68fKA9JPXqsBAAAAAADwhLAUdzLh6WKA+shnPbDiRF/C0TPCUQAAAAAAgBxhKUoxh0Uthqc7ovs0ZOeSzvQlGOVQJgAAAAAAgCUIS7Exs/d0sQO1IzpQfTiRNFMejp6xbxQAAAAAAKAcwlI4sdCBuqM8PJ3/mi7UzZ1rIRSVNKNjFAAAAAAAYHOEpahclMQ9SfMwtaMvYSpB6hfnkj4pH5//pC+h6MxjTQAAAAAAAI1GWIqgmAOlHupLiDoPVaXmBKrzIHQegkp5KCpx4BIAAAAAAIA3hKWoJdOdOjcPWOd6+prtoHUeeC6ambe5s4X3oSsUAAAAAAAgcISlAAAAAAAAACDpnu8CAAAAAAAAACAEhKUAAAAAAAAAIMJSAAAAAAAAAJBEWAoAAAAAAAAAkghLAQAAAAAAAEASYSkAAAAAAAAASCIsBQAAAAAAAABJhKUAAAAAAAAAIImwFAAAAAAAAAAkSf8fHWLoBU/lmdQAAAAASUVORK5CYII=";
+const LOGO_RATIO = 1355 / 299; // true pixel aspect of the transparent PNG
+
+// Headline-underline device — the 2G brand signature: bold 2G-green text above a
+// solid green bar ~90% of the text width. Use this for headlines, don't hand-roll one.
+const H1 = (txt, size = 30) => (
+  <span style={{ display: "inline-block", position: "relative", color: C.green, fontWeight: 700, fontSize: size, lineHeight: 1.08, letterSpacing: "-.015em", whiteSpace: "nowrap", paddingBottom: 8 }}>
+    {txt}
+    <span style={{ position: "absolute", left: 0, bottom: 0, width: "90%", height: 4, background: C.green, borderRadius: 4 }} />
+  </span>
+);
+
+// Plain-language jargon helper. Renders a small ⓘ that reveals a hover bubble (.tip CSS is in the head).
+// Only use where there's no scroll/overflow clip (results column + the simple rail) — see HANDOFF gotchas.
+// tabIndex makes it focusable so a phone TAP opens the bubble (CSS :focus), not just desktop hover.
+const Info = ({ children }) => (
+  <span className="tip" tabIndex={0} role="button" aria-label="What this means">i<span className="tip-body">{children}</span></span>
+);
+
+const labelStyle = {
+  fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase",
+  color: C.muted, fontFamily: mono, marginBottom: 5, display: "block",
+};
+const inputStyle = {
+  background: C.panel2, border: `1px solid ${C.line}`, borderRadius: 4,
+  color: C.text, fontFamily: mono, fontSize: 14, padding: "7px 9px",
+  width: "100%", outline: "none",
+};
+const segBtn = (active) => ({
+  flex: 1, padding: "8px 4px",
+  background: active ? C.greenLt : C.panel2,
+  border: `1px solid ${active ? C.green : C.line}`,
+  color: active ? C.green : C.muted,
+  fontFamily: mono, fontSize: 12, fontWeight: active ? 700 : 400, borderRadius: 4, cursor: "pointer",
+});
+
+function SectionTitle({ children }) {
+  return (
+    <div style={{
+      fontFamily: cond, fontSize: 17, fontWeight: 700, letterSpacing: ".06em",
+      textTransform: "uppercase", color: C.text,
+      borderBottom: `1px solid ${C.line}`, padding: "0 0 6px", margin: "0 0 10px",
+    }}>{children}</div>
+  );
+}
+
+function NumInput({ k, a, setA, label, tip }) {
+  const item = a[k];
+  const lo = item.min ?? -Infinity, hi = item.max ?? Infinity;
+  // Hold the raw text while typing so decimals ("0.25") and a temporarily-empty field don't fight
+  // you; clamp + commit to the model on blur / Enter, not on every keystroke.
+  const [text, setText] = useState(String(item.v));
+  useEffect(() => { setText(String(item.v)); }, [item.v]); // reflect preset / reset / shared-link changes
+  const commit = () => {
+    const raw = parseFloat(text);
+    const v = isNaN(raw) ? item.v : Math.min(hi, Math.max(lo, raw));
+    setText(String(v));
+    if (v !== item.v) setA({ ...a, [k]: { ...item, v } });
+  };
+  return (
+    <div style={{ marginBottom: 11 }}>
+      <label style={labelStyle}>{label ?? item.label}{tip && <Info>{tip}</Info>}</label>
+      <input
+        type="number"
+        step={item.step ?? "any"}
+        min={isFinite(lo) ? lo : undefined}
+        max={isFinite(hi) ? hi : undefined}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
+        style={inputStyle}
+      />
+    </div>
+  );
+}
+
+/* Segmented AIR / HYDRO / IMMERSION toggle (renders one button per COOLING entry).
+   Swaps the machine's hash + draw as a set — and its price too, unless you already own
+   the rigs ($0). Highlights the matching preset, or nothing (custom) once hand-edited.
+   Used in both rails. Add a cooling type by adding one entry to COOLING; the UI follows. */
+function CoolingToggle({ a, setA }) {
+  const active = activeCooling(a);
+  const ownsRigs = a.asicPrice.v === 0; // "you already own them" deal shape
+  const setCooling = (key) => {
+    if (active === key) return; // already there — don't needlessly drop out of preset mode
+    const p = COOLING[key].patch;
+    const next = {};
+    Object.keys(a).forEach((k) => (next[k] = { ...a[k] }));
+    next.hashTH = { ...next.hashTH, v: p.hashTH };
+    next.drawKW = { ...next.drawKW, v: p.drawKW };
+    if (!ownsRigs) next.asicPrice = { ...next.asicPrice, v: p.asicPrice }; // keep $0 if you already own the rigs
+    setA(next);
+  };
+  const jTH = (a.drawKW.v * 1000 / a.hashTH.v);
+  const perTH = a.hashTH.v > 0 ? a.asicPrice.v / a.hashTH.v : 0;
+  const priceTxt = ownsRigs ? "rigs you own" : `≈$${perTH.toFixed(0)}/TH`;
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <label style={labelStyle}>ASIC cooling</label>
+      <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+        {Object.keys(COOLING).map((key) => (
+          <button key={key} style={segBtn(active === key)} onClick={() => setCooling(key)}>{COOLING[key].label}</button>
+        ))}
+      </div>
+      <div style={{ fontSize: 10.5, color: C.muted, marginBottom: 4, lineHeight: 1.45 }}>
+        {active
+          ? `${COOLING[active].short} — ${fmt(a.hashTH.v)} TH/s @ ${a.drawKW.v} kW (${jTH.toFixed(1)} J/TH, ${priceTxt}). ` + COOLING[active].note
+          : "Custom hardware — not a stock air-, hydro-, or immersion-cooled machine."}
+      </div>
+    </div>
+  );
+}
+
+/* Rig catalog dropdown (Mode A). Picking a machine sets hash + draw + price as a set;
+   "Custom" reveals the three fields to type. Grouped by maker for neutrality. */
+function RigPicker({ a, setA }) {
+  const active = activeRig(a);
+  const selectRig = (id) => {
+    const r = RIGS.find((x) => x.id === id);
+    if (!r) return; // "custom" — keep current values, user edits the revealed fields
+    setA({
+      ...a,
+      hashTH:    { ...a.hashTH,    v: r.hashTH },
+      drawKW:    { ...a.drawKW,    v: rigDrawKW(r) },
+      asicPrice: { ...a.asicPrice, v: r.price },
+    });
+  };
+  const jTH = a.hashTH.v > 0 ? (a.drawKW.v * 1000 / a.hashTH.v) : 0;
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label style={labelStyle}>Your mining rig</label>
+      <select value={active ? active.id : "custom"} onChange={(e) => selectRig(e.target.value)}
+        style={{ ...inputStyle, cursor: "pointer" }}>
+        {["Bitmain", "MicroBT"].map((mk) => (
+          <optgroup key={mk} label={mk}>
+            {RIGS.filter((r) => r.maker === mk).map((r) => (
+              <option key={r.id} value={r.id}>{r.name} — {r.hashTH} TH/s · {r.jTH} J/TH</option>
+            ))}
+          </optgroup>
+        ))}
+        <option value="custom">Custom (enter your own)</option>
+      </select>
+      {active ? (
+        <div style={{ fontSize: 10.5, color: C.muted, marginTop: 5, lineHeight: 1.4 }}>
+          {active.hashTH} TH/s @ {rigDrawKW(active)} kW · {active.jTH} J/TH · ≈${active.price.toLocaleString()}/unit (price editable in Advanced)
+        </div>
+      ) : (
+        <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          <NumInput k="hashTH" a={a} setA={setA} label="Hashrate (TH/s)" />
+          <NumInput k="drawKW" a={a} setA={setA} label="Power draw (kW)" />
+          <NumInput k="asicPrice" a={a} setA={setA} label="Price ($/unit)" />
+          <div style={{ alignSelf: "end", fontSize: 11, color: C.muted, fontFamily: mono, paddingBottom: 9 }}>= {jTH.toFixed(1)} J/TH</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Mode A — "Does mining pay?" The neutral front door: power cost + rig → verdict.
+   Reuses the shared engine's revenue math (via computeModeA) so it never disagrees with Mode B. */
+function ModeAView({ a, setA, mA, live, fetchLive, goToSiteMode, goToGas }) {
+  const linkBtn = { background: "none", border: "none", color: C.green, fontWeight: 700, cursor: "pointer", fontFamily: FONT, fontSize: 12.5, textDecoration: "underline", padding: 0 };
+  const g = (k) => a[k].v;
+  const pays = mA.profitDay >= 0;
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto", padding: "22px 20px" }}>
+      <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, padding: 20, marginBottom: 16 }}>
+        <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 18, color: C.text, marginBottom: 4 }}>Does mining pay?</div>
+        <div style={{ fontSize: 12, color: C.muted, marginBottom: 16, lineHeight: 1.5 }}>
+          Enter your power cost, pick your rig, and see if it profits at today's bitcoin price.
+        </div>
+        <RigPicker a={a} setA={setA} />
+        <NumInput k="powerCost" a={a} setA={setA} label="Your power cost (¢/kWh)" />
+        <NumInput k="siteKW" a={a} setA={setA} label="How much power you run (kW)" />
+        <div style={{ fontSize: 10.5, color: C.muted, margin: "-6px 0 12px" }}>≈ {fmt(mA.nASIC)} miners · {fmt(mA.fleetTH / 1000, 1)} PH/s fleet</div>
+        <NumInput k="btcPrice" a={a} setA={setA} label="Bitcoin price ($)" />
+        <button onClick={fetchLive} disabled={live && live.state === "loading"}
+          style={{ ...segBtn(false), width: "100%", marginTop: 2, cursor: live && live.state === "loading" ? "wait" : "pointer" }}>
+          {live && live.state === "loading" ? "↻ FETCHING…" : "↻ FETCH LIVE BTC"}
+        </button>
+        {live && <div style={{ fontSize: 10, marginTop: 6, fontFamily: mono, color: live.state === "err" ? C.red : live.state === "ok" ? C.green : C.muted }}>{live.msg}</div>}
+      </div>
+
+      <div style={{ background: C.panel, border: `2px solid ${pays ? C.green : C.red}`, borderRadius: 8, padding: "18px 20px", marginBottom: 16 }}>
+        <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: C.muted }}>Profit per day {pays ? "" : "(loss)"}</div>
+        <div style={{ fontFamily: mono, fontSize: 34, fontWeight: 700, color: pays ? C.green : C.red, margin: "2px 0 4px" }}>{money(mA.profitDay)}</div>
+        <div style={{ fontSize: 12.5, color: C.text, lineHeight: 1.5 }}>
+          {pays
+            ? `Profitable — ${fmt(mA.margin * 100, 0)}% margin at ${money(g("btcPrice"))} BTC and ${fmt(g("powerCost"), 1)}¢/kWh power.`
+            : `Loses money at ${fmt(g("powerCost"), 1)}¢/kWh. You'd need power below ${fmt(mA.bePowerCost, 1)}¢/kWh, or BTC above ${money(mA.beBTC)}.`}
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px,1fr))", gap: 10, marginBottom: 16 }}>
+        {[
+          ["Break-even power cost", mA.bePowerCost != null ? fmt(mA.bePowerCost, 1) + "¢/kWh" : "—", "The most you can pay for power and still break even. Anything below this profits."],
+          ["Break-even BTC price", money(mA.beBTC), "The bitcoin price at which mining revenue equals your power bill."],
+          ["Revenue / day", money(mA.revDay), "Mining revenue per day at 100% uptime, after pool fee."],
+          ["Power cost / day", money(mA.powerDay), "Your electricity bill per day running full-tilt."],
+          ["Payback", mA.paybackMo != null ? fmt(mA.paybackMo, 1) + " mo" : "—", "Months to earn back the cost of the rigs from profit (if buying)."],
+        ].map(([l, v, tip]) => (
+          <div key={l} style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "11px 13px" }}>
+            <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".06em", textTransform: "uppercase", color: C.muted }}>{l}<Info>{tip}</Info></div>
+            <div style={{ fontFamily: mono, fontSize: 17, fontWeight: 600, color: C.text, marginTop: 3 }}>{v}</div>
+          </div>
+        ))}
+      </div>
+
+      {g("powerCost") > 6.5 && (
+        <EarnedCTA
+          headline={pays ? "Paying more than you need for power?" : "Cheaper power would flip this."}
+          sub={pays
+            ? `You're mining at ${fmt(g("powerCost"), 1)}¢/kWh. 2G delivers on-site stranded-gas power — often cheaper, deployed in weeks with guaranteed uptime. Every cent off your power cost drops straight to margin.`
+            : `At ${fmt(g("powerCost"), 1)}¢/kWh this loses money — you'd need power below ${fmt(mA.bePowerCost, 1)}¢/kWh. 2G delivers stranded-gas power fast; tell us about your site.`}
+        />
+      )}
+
+      <div style={{ background: C.greenLt, border: `1px solid ${C.green}`, borderRadius: 6, padding: "12px 16px", fontSize: 12.5, color: C.text, lineHeight: 1.6 }}>
+        <div style={{ marginBottom: 4 }}>
+          Powering a new site?{" "}
+          <button onClick={goToSiteMode} style={linkBtn}>Compare gensets vs. renting power vs. grid →</button>
+        </div>
+        <div>
+          Sitting on stranded gas?{" "}
+          <button onClick={goToGas} style={linkBtn}>See how much power it can mine →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Site sizing (Mode B): size the project by power (kW) or by available gas (MCF/day).
+   Gas → kW via the genset fuel burn: kW = MCF/day × 1000 ÷ 24 ÷ (scf/hr per kW),
+   ≈ 4.5 kW per MCF/day (≈ 1 MW per ~220 MCF/day) at the default ~9.27 scf/hr/kW.
+   siteKW stays the canonical size the engine reads; gas mode just derives it. */
+function SiteSizer({ a, setA, sizeBy, setSizeBy }) {
+  const burn = a.fuelOwn.v > 0 ? a.fuelOwn.v : 9.27;   // scf/hr per kW
+  const kWperMCFD = 1000 / 24 / burn;                  // ≈ 4.5
+  const kwToMcfd = (kw) => kw / kWperMCFD;
+  const mcfdToKw = (mcfd) => mcfd * kWperMCFD;
+  // gas-mode input holds MCF/day text, synced from the canonical siteKW
+  const [gasText, setGasText] = useState(String(Math.round(kwToMcfd(a.siteKW.v))));
+  useEffect(() => { setGasText(String(Math.round(kwToMcfd(a.siteKW.v)))); }, [a.siteKW.v, burn]);
+  const commitGas = () => {
+    const mcfd = parseFloat(gasText);
+    if (!isNaN(mcfd) && mcfd >= 0) {
+      const kw = Math.max(1, Math.round(mcfdToKw(mcfd)));
+      if (kw !== a.siteKW.v) setA({ ...a, siteKW: { ...a.siteKW, v: kw } });
+    } else { setGasText(String(Math.round(kwToMcfd(a.siteKW.v)))); }
+  };
+  const nASIC = a.drawKW.v > 0 ? Math.floor(a.siteKW.v / a.drawKW.v) : 0;
+  const mw = a.siteKW.v / 1000;
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label style={labelStyle}>Size the project by</label>
+      <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+        <button style={segBtn(sizeBy === "kw")} onClick={() => setSizeBy("kw")}>POWER (kW)</button>
+        <button style={segBtn(sizeBy === "gas")} onClick={() => setSizeBy("gas")}>GAS (MCF/day)</button>
+      </div>
+      {sizeBy === "kw" ? (
+        <NumInput k="siteKW" a={a} setA={setA} label="Site size (kW)" />
+      ) : (
+        <div>
+          <label style={labelStyle}>Gas available (MCF/day)</label>
+          <input type="number" min="0" step="10" value={gasText}
+            onChange={(e) => setGasText(e.target.value)} onBlur={commitGas}
+            onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
+            style={inputStyle} />
+          <div style={{ fontSize: 10.5, color: C.muted, marginTop: 5, lineHeight: 1.45 }}>
+            ≈ {fmt(mw, mw < 10 ? 1 : 0)} MW → {fmt(nASIC)} miners · ~{kWperMCFD.toFixed(1)} kW per MCF/day (at {burn} scf/hr/kW burn)
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Earned CTA — rendered ONLY when the math actually favors cheaper/faster 2G power.
+   No wall, no always-on pitch: if a miner already has cheap power, this never shows.
+   The button opens the user's email client pre-addressed to 2G with their scenario link —
+   plain mailto, no backend, nothing sent without the user hitting send. Never prints. */
+function EarnedCTA({ headline, sub }) {
+  const email = () => {
+    const url = (typeof window !== "undefined" && window.location) ? window.location.href : "";
+    const body = `${sub}\n\nMy scenario: ${url}\n\n(Sent from the Bitcoin Mining Calculator)`;
+    window.location.href = `mailto:${CONTACT_EMAIL}`
+      + `?subject=${encodeURIComponent("Mining power inquiry — calculator scenario")}`
+      + `&body=${encodeURIComponent(body)}`;
+  };
+  return (
+    <div className="no-print" style={{ background: C.green, borderRadius: 8, padding: "15px 18px", marginBottom: 16, color: "#fff" }}>
+      <div style={{ fontWeight: 700, fontSize: 13.5, marginBottom: 3 }}>{headline}</div>
+      <div style={{ fontSize: 12, opacity: 0.93, marginBottom: 11, lineHeight: 1.5 }}>{sub}</div>
+      <button onClick={email} style={{ background: "#fff", color: C.green, border: "none", fontWeight: 700, fontSize: 12.5, padding: "8px 14px", borderRadius: 4, cursor: "pointer", fontFamily: mono }}>
+        Talk to 2G about powering this →
+      </button>
+    </div>
+  );
+}
+
+function Row({ label, own, rent, grid, diff, d = 0, unit = "$", strong = false, goodIsPositive = true }) {
+  const f = (n) => (unit === "$" ? money(n, d) : fmt(n, d));
+  const diffColor = diff === null || diff === undefined || isNaN(diff) ? C.muted
+    : (diff >= 0) === goodIsPositive ? C.green : C.amber;
+  const cell = { padding: "7px 10px", fontFamily: mono, fontSize: 13, textAlign: "right", whiteSpace: "nowrap" };
+  return (
+    <tr style={{ borderBottom: `1px solid ${C.line}`, background: strong ? "rgba(19,100,31,.06)" : "transparent" }}>
+      <td style={{ padding: "7px 10px", fontSize: 13, color: strong ? C.text : C.muted, fontWeight: strong ? 600 : 400 }}>{label}</td>
+      <td style={{ ...cell, color: C.text }}>{f(own)}</td>
+      <td style={{ ...cell, color: strong ? C.green : C.text, fontWeight: strong ? 600 : 400 }}>{f(rent)}</td>
+      <td style={{ ...cell, color: C.text }}>{grid === undefined ? "—" : f(grid)}</td>
+      <td style={{ ...cell, color: diffColor }}>{diff === null ? "—" : f(diff)}</td>
+    </tr>
+  );
+}
+function Head({ label }) {
+  return (
+    <tr><td colSpan={5} style={{ padding: "12px 10px 5px", fontFamily: mono, fontSize: 10.5, letterSpacing: ".1em", textTransform: "uppercase", color: C.green }}>{label}</td></tr>
+  );
+}
+
+/* ---------- cumulative cash chart, 4 series ---------- */
+function niceStep(span, targetTicks) {
+  const raw = span / targetTicks;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  for (const mult of [1, 2, 2.5, 5, 10]) {
+    if (mag * mult >= raw) return mag * mult;
+  }
+  return mag * 10;
+}
+function CashChart({ m, halvingMo, dynamic }) {
+  const W = 720, H = 260, padL = 74, padR = 18, padT = 16, padB = 30;
+  // draw order = paint order: non-2G paths first, 2G hero paths last (on top)
+  const series = [
+    { arr: m.grid.cash, color: C.grid, dash: "", w: 2.25 },
+    { arr: m.own.cash, color: C.owned, dash: "", w: 2.25 },
+    { arr: m.rent.cash, color: C.green, dash: "", w: 2.75 },
+  ];
+  const all = series.flatMap((s) => s.arr).concat([0]);
+  const dMin = Math.min(...all), dMax = Math.max(...all);
+  const step = niceStep((dMax - dMin) || 1, 5);
+  const min = Math.floor(dMin / step) * step;
+  const max = Math.ceil(dMax / step) * step;
+  const span = max - min || 1;
+  const ticks = [];
+  for (let v = min; v <= max + step / 2; v += step) ticks.push(v);
+  const N = m.months;
+  const x = (i) => padL + (i / (N - 1)) * (W - padL - padR);
+  const y = (v) => padT + (1 - (v - min) / span) * (H - padT - padB);
+  const path = (arr) => arr.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  const fm = (v) => {
+    if (v === 0) return "$0";
+    const s = v < 0 ? "-$" : "$";
+    const av = Math.abs(v);
+    if (av >= 1e6) return s + (av / 1e6).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "M";
+    return s + (av / 1e3).toFixed(0) + "k";
+  };
+  const yrs = Math.round(N / 12);
+  const yearEvery = yrs > 7 ? 2 : 1; // avoid crowded x labels on long horizons
+  const showHalving = dynamic && halvingMo > 0 && halvingMo < N;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }}>
+      {/* gridlines + y labels */}
+      {ticks.map((v, i) => (
+        <g key={i}>
+          <line x1={padL} y1={y(v)} x2={W - padR} y2={y(v)}
+            stroke={v === 0 ? C.muted : C.line} strokeWidth={v === 0 ? 1.2 : 1}
+            strokeDasharray={v === 0 ? "" : "2 4"} opacity={v === 0 ? 0.9 : 0.55} />
+          <text x={padL - 9} y={y(v) + 4} textAnchor="end" fill={v === 0 ? C.text : C.muted}
+            fontSize="11.5" fontFamily={mono}>{fm(v)}</text>
+        </g>
+      ))}
+      {/* x labels */}
+      {Array.from({ length: yrs + 1 }, (_, i) => i).filter((i) => i % yearEvery === 0).map((i) => (
+        <text key={i} x={x(Math.min(N - 1, i * 12))} y={H - 9} textAnchor="middle"
+          fill={C.muted} fontSize="11.5" fontFamily={mono}>Y{i}</text>
+      ))}
+      {/* halving markers (first ≈Apr 2028, then every 48 months) */}
+      {showHalving && Array.from({ length: Math.ceil((N - halvingMo) / 48) }, (_, k) => halvingMo + k * 48)
+        .filter((hm) => hm < N).map((hm, k) => (
+          <g key={"h" + k}>
+            <line x1={x(hm)} y1={padT} x2={x(hm)} y2={H - padB}
+              stroke={C.red} strokeWidth="1" strokeDasharray="3 4" opacity="0.7" />
+            <text x={x(hm) + 5} y={padT + 10} fill={C.red} fontSize="10"
+              fontFamily={mono} letterSpacing=".08em">{k === 0 ? "HALVING" : "HALVING " + (k + 1)}</text>
+          </g>
+        ))}
+      {/* series */}
+      {series.map((s, i) => (
+        <path key={i} d={path(s.arr)} fill="none" stroke={s.color} strokeWidth={s.w} strokeDasharray={s.dash} strokeLinejoin="round" />
+      ))}
+    </svg>
+  );
+}
+
+/* ---------- shareable scenario state (URL hash) ----------
+   Encodes only the inputs that differ from DEFAULTS, plus the market mode,
+   so a rep can send a configured link. No backend, no storage. */
+function clampVal(k, raw) {
+  const d = DEFAULTS[k]; if (!d) return raw;
+  const lo = d.min ?? -Infinity, hi = d.max ?? Infinity;
+  const n = parseFloat(raw);
+  return isNaN(n) ? d.v : Math.min(hi, Math.max(lo, n));
+}
+function encodeState(a, dynamic) {
+  const vals = {};
+  Object.keys(DEFAULTS).forEach((k) => {
+    if (a[k] && a[k].v !== DEFAULTS[k].v) vals[k] = a[k].v;
+  });
+  const payload = { d: dynamic ? 1 : 0, v: vals };
+  return encodeURIComponent(JSON.stringify(payload));
+}
+function decodeState() {
+  try {
+    const h = (location.hash || "").replace(/^#/, "");
+    if (!h) return null;
+    const p = JSON.parse(decodeURIComponent(h));
+    if (!p || typeof p !== "object") return null;
+    // NOTE: links shared before v4 may carry a `w` (tab) key and rent-to-own inputs.
+    // Both are ignored here; buildA() drops any key no longer in DEFAULTS.
+    return { dynamic: p.d !== 0, vals: p.v || {} };
+  } catch (e) { return null; }
+}
+function buildA(vals) {
+  const a = {};
+  Object.keys(DEFAULTS).forEach((k) => {
+    a[k] = { ...DEFAULTS[k], v: vals && vals[k] !== undefined ? clampVal(k, vals[k]) : DEFAULTS[k].v };
+  });
+  return a;
+}
+
+/* ============================================================ app */
+function App() {
+  const boot = useMemo(decodeState, []); // restore a shared scenario from the URL hash, once
+  const [dynamic, setDynamic] = useState(boot ? boot.dynamic : true);
+  const [a, setA] = useState(boot ? buildA(boot.vals) : applyPatch(DEFAULTS, PRESETS.bridge.patch));
+  const [preset, setPreset] = useState(boot ? null : "bridge"); // a shared link is a custom scenario
+  // Customer-friendly view: Simple by default (4 core inputs), Advanced reveals the full rail.
+  // A shared/tuned link opens in Advanced so the recipient can see the custom assumptions.
+  const [simple, setSimple] = useState(!boot);
+  const [showDetail, setShowDetail] = useState(false); // steady-state annual table collapsed by default
+  const [focus, setFocus] = useState("rent"); // which deal shape the headline speaks to: rent | own | grid
+  const [copied, setCopied] = useState(false);
+  const [live, setLive] = useState(null); // { state:'loading'|'ok'|'err', msg }
+  // top-level mode: "A" = "Does mining pay?" (neutral front door) · "B" = "Power a site" (the
+  // full own/rent/grid comparison). Land in A on a fresh load; a shared link is a Mode B scenario.
+  const [mode, setMode] = useState(boot ? "B" : "A");
+  // Mode B site sizing: "kw" = enter power directly · "gas" = enter MCF/day, derive kW
+  const [sizeBy, setSizeBy] = useState("kw");
+  const editA = (next) => { setPreset(null); setA(next); }; // manual edits leave preset mode
+  // keep the URL hash in sync so the current scenario is always shareable
+  useEffect(() => {
+    history.replaceState(null, "", "#" + encodeState(a, dynamic));
+  }, [a, dynamic]);
+  const copyLink = async () => {
+    const url = location.href.split("#")[0] + "#" + encodeState(a, dynamic);
+    try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 1600); }
+    catch (e) { window.prompt("Copy this shareable link:", url); }
+  };
+  // Soft capture — email this scenario to yourself, a colleague, or 2G. Plain mailto: no backend,
+  // no form service, nothing leaves the browser until the user hits send in their own mail app.
+  // A mailto can't attach a PDF, so the body carries the live scenario link + the headline numbers
+  // and points at PRINT / PDF for the one-pager. Recipient is blank on purpose — the user chooses.
+  const emailScenario = () => {
+    const url = location.href.split("#")[0] + "#" + encodeState(a, dynamic);
+    const rig = activeRig(a);
+    const lines = mode === "A"
+      ? [
+          `Rig: ${rig ? rig.name : "Custom"} — ${fmt(a.hashTH.v)} TH/s @ ${fmt(a.drawKW.v, 2)} kW`,
+          `Power cost: ${fmt(a.powerCost.v, 1)}¢/kWh · Size: ${fmt(a.siteKW.v)} kW (${fmt(mA.nASIC)} miners)`,
+          `Bitcoin price used: ${money(a.btcPrice.v)}`,
+          ``,
+          `Profit per day: ${money(mA.profitDay)}${mA.profitDay >= 0 ? ` (${fmt(mA.margin * 100, 0)}% margin)` : " (loss)"}`,
+          `Break-even power cost: ${mA.bePowerCost != null ? fmt(mA.bePowerCost, 1) + "¢/kWh" : "—"}`,
+          `Break-even BTC price: ${money(mA.beBTC)}`,
+        ]
+      : [
+          `Site: ${fmt(a.siteKW.v)} kW · Gas ${money(a.gasPrice.v, 2)}/MCF · ${fmt(a.years.v)}-year comparison`,
+          `Bitcoin price used: ${money(a.btcPrice.v)}`,
+          ``,
+          `Rent power from 2G: ${money(m.rent.net)} net cash`,
+          `Buy your own gensets: ${money(m.own.net)} net cash`,
+          `Buy grid power: ${money(m.grid.net)} net cash`,
+        ];
+    const body = lines.join("\n")
+      + `\n\nOpen this exact scenario (every input rides in the link):\n${url}`
+      + `\n\nFor a one-page PDF, open the link and use PRINT / PDF → "Save as PDF".`
+      + `\n\nBudgetary only — not a quote. Built by 2G Energy Rental.`;
+    window.location.href = "mailto:"
+      + `?subject=${encodeURIComponent("My bitcoin mining scenario")}`
+      + `&body=${encodeURIComponent(body)}`;
+  };
+  // Optional live refresh of BTC price + network hashrate from mempool.space (keyless, CORS-open).
+  // Graceful: on any failure (offline, blocked, bad data) it keeps the current values and says so.
+  const fetchLive = async () => {
+    setLive({ state: "loading", msg: "Fetching live BTC price + network hashrate…" });
+    const get = (url) => {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 8000);
+      return fetch(url, { signal: ctl.signal }).finally(() => clearTimeout(t));
+    };
+    const okNum = (n) => isFinite(n) && n > 0;
+    // Each getter resolves to a good number or null — never throws — so one dead endpoint
+    // can't sink the whole fetch. Price and hashrate are pulled independently, each with a
+    // primary + fallback source (all keyless & CORS-open), so a blocked mempool still yields data.
+    const priceGetters = [
+      async () => { const j = await (await get("https://mempool.space/api/v1/prices")).json(); return Math.round(Number(j.USD)); },
+      async () => { const j = await (await get("https://api.coinbase.com/v2/prices/BTC-USD/spot")).json(); return Math.round(Number(j.data.amount)); },
+    ];
+    const hashGetters = [
+      async () => { const j = await (await get("https://mempool.space/api/v1/mining/hashrate/1m")).json(); return Math.round(Number(j.currentHashrate) / 1e18); }, // H/s → EH/s
+      async () => { const t = await (await get("https://blockchain.info/q/hashrate")).text(); return Math.round(Number(t) / 1e9); },                             // GH/s → EH/s
+    ];
+    const firstOk = async (getters) => {
+      for (const g of getters) { try { const v = await g(); if (okNum(v)) return v; } catch (e) { /* try next source */ } }
+      return null;
+    };
+    const [usd, eh] = await Promise.all([firstOk(priceGetters), firstOk(hashGetters)]);
+    if (usd == null && eh == null) {
+      // Nothing came back. The usual cause is running the raw file from disk (file://), where
+      // the browser blocks the live call — say so plainly instead of a generic failure.
+      const hint = location.protocol === "file:"
+        ? "Open the hosted link, not the local file — live fetch is blocked when the page runs from disk."
+        : "Offline or the network blocked the request — kept current values.";
+      setLive({ state: "err", msg: "Live fetch failed. " + hint });
+      return;
+    }
+    setA((prev) => {
+      const next = {};
+      Object.keys(prev).forEach((k) => (next[k] = { ...prev[k] }));
+      if (usd != null) next.btcPrice = { ...next.btcPrice, v: usd };
+      if (eh != null) next.netHashEH = { ...next.netHashEH, v: eh };
+      return next;
+    });
+    setPreset(null);
+    const t = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const parts = [];
+    if (usd != null) parts.push(`BTC $${usd.toLocaleString()}`);
+    if (eh != null) parts.push(`${eh.toLocaleString()} EH/s`);
+    const partial = (usd == null || eh == null) ? " · partial" : "";
+    setLive({ state: "ok", msg: `Live: ${parts.join(" · ")} · ${t}${partial}` });
+  };
+  const applyPreset = (key) => {
+    const p = PRESETS[key].patch;
+    const next = {};
+    Object.keys(a).forEach((k) => (next[k] = { ...a[k], v: p[k] !== undefined ? p[k] : a[k].v }));
+    setA(next);
+    setPreset(key);
+  };
+  const m = useMemo(() => computeModel(a, dynamic), [a, dynamic]);
+  const mA = useMemo(() => computeModeA(a), [a]); // Mode A snapshot
+  const sens = useMemo(() => scenarios(a, dynamic), [a, dynamic]);
+  const be = useMemo(() => breakEvenBTC(a, dynamic), [a, dynamic]); // BTC where 2G advantage → 0 (RELATIVE)
+  const viable = useMemo(() => viableBTC(a, dynamic), [a, dynamic]); // BTC where best 2G net → 0 (ABSOLUTE)
+
+  // ---- deal shape in focus: which of the three the headline takeaway + net-cash banner speak to.
+  // The full three-way comparison always renders below; this only reframes the top so a rep can
+  // walk each shape on its own. Default = renting 2G power (2G's offer).
+  const SHAPES = {
+    rent: { key: "rent", btn: "BUY ASICS · RENT POWER (2G)", verb: "renting power from 2G", color: C.green,
+      net: m.rent.net, npv: m.rent.npv,
+      desc: "You buy the miners and rent your power from 2G — deployed from inventory in weeks, guaranteed uptime, no generators to buy." },
+    own: { key: "own", btn: "BUY ASICS · BUY GENSETS", verb: "buying your own gensets", color: C.owned,
+      net: m.own.net, npv: m.own.npv,
+      desc: "You buy the miners and buy your own gensets — the full DIY build. Big up-front capital and you wait on genset lead times." },
+    grid: { key: "grid", btn: "BUY ASICS · WAIT FOR GRID", verb: "waiting for grid power", color: C.grid,
+      net: m.grid.net, npv: m.grid.npv,
+      desc: "You buy the miners and wait for a utility interconnection — cheapest power on paper, but a multi-year queue before first hash." },
+  };
+  const fp = SHAPES[focus] || SHAPES.rent;
+  const fProfit = fp.net >= 0;
+  // The headline compares the focused shape to its most relevant alternative: for 2G rental that's
+  // buying your own gensets; for the DIY/grid shapes it's 2G rental (keeps the comparison 2G-centric).
+  const cmpNet = focus === "rent" ? m.own.net : m.rent.net;
+  const cmpNpv = focus === "rent" ? m.own.npv : m.rent.npv;
+  const cmpLabel = focus === "rent" ? "buying your own gensets" : "renting from 2G";
+
+  const groups = {};
+  Object.keys(DEFAULTS).forEach((k) => {
+    const grp = DEFAULTS[k].grp;
+    if (grp === "Mode A") return; // Mode-A-only inputs don't belong in the site-power rail
+    if (k === "siteKW") return;   // sized via the SiteSizer (kW / MCF-day toggle) instead
+    (groups[grp] = groups[grp] || []).push(k);
+  });
+
+  const yrs = Math.round(m.months / 12);
+  const advPositive = m.advantage >= 0;
+  // Does the site make money AT ALL? `advantage` is only 2G-vs-owned (a gap between two
+  // outcomes that can both be losses), so the banner leads with this absolute verdict instead.
+  const profitable = m.best2G >= 0;
+  // When a project doesn't pencil, name the concrete levers that would flip it, so a losing
+  // scenario becomes a next step instead of a dead end. Ordered most-actionable first.
+  const fixHint = (() => {
+    if (profitable) return "";
+    const parts = [];
+    if (viable != null) parts.push(`get BTC above ${money(viable)}`);
+    if (a.years.v > 2) parts.push("shorten to a ~2-year bridge through the halving");
+    if (a.asicPrice.v > 0) parts.push("start from rigs you already own");
+    return parts.length ? `To make it pencil: ${parts.join(", ")}.` : "";
+  })();
+  // shared phrasing for the takeaway card + executive summary, so they can never disagree
+  const mwv = a.siteKW.v / 1000;
+  const siteTxt = mwv >= 1 ? `${fmt(mwv, mwv < 10 ? 1 : 0)} MW` : `${fmt(a.siteKW.v, 0)} kW`;
+  const btcTxt = a.btcPrice.v >= 1000
+    ? `BTC $${fmt(a.btcPrice.v / 1000, a.btcPrice.v % 1000 === 0 ? 0 : 1)}k`
+    : `BTC ${money(a.btcPrice.v)}`;
+
+  // One-sentence, plain-English read of the model for a novice.
+  // ALWAYS leads with the absolute outcome — does this project make money at all? — because the
+  // 2G-vs-owned advantage is a gap between two outcomes that can BOTH be losses, and reading it
+  // as profit is the single easiest way to mislead a customer. The comparison is the second clause.
+  const takeaway = (() => {
+    const soonerMo = Math.max(0, Math.round(m.firstHashOwn - m.firstHashRent));
+    const soonerTxt = soonerMo > 0 ? `, starts mining ${soonerMo} month${soonerMo === 1 ? "" : "s"} sooner` : "";
+    const absTxt = moneyM(Math.abs(fp.net));
+    const lead = fProfit
+      ? `On a ${siteTxt} site, ${fp.verb} nets about ${absTxt} over ${yrs} years at ${btcTxt}`
+      : `On a ${siteTxt} site, ${fp.verb} loses about ${absTxt} over ${yrs} years at ${btcTxt}`;
+
+    if (focus === "rent") {
+      // 2G's own offer — measure it against building your own gensets (the DIY competitor).
+      const gap = money(Math.abs(m.rent.net - m.own.net));
+      const rentWins = m.rent.net >= m.own.net;
+      if (fProfit) {
+        return rentWins
+          ? `${lead} — ${gap} better than buying your own gensets${soonerTxt}, and it avoids ${money(m.genCapex)} of up-front genset cost.`
+          : `${lead}. Buying your own gensets shows ${gap} more on paper, but only if the gensets arrive on time and run — 2G deploys from inventory${soonerTxt}, guarantees ${fmt(a.rentUptime.v)}% uptime, and ties up none of the ${money(m.genCapex)} in gensets.`;
+      }
+      return rentWins
+        ? `${lead} — renting from 2G is ${gap} better than buying your own gensets${soonerTxt}, but neither path pays at this bitcoin price. Check the break-even BTC before taking it further.`
+        : `${lead}, and buying your own gensets loses ${gap} less. Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
+    }
+
+    // Buying your own gensets or waiting for grid — measure the shape against 2G's offer (renting).
+    const gap = money(Math.abs(fp.net - m.rent.net));
+    const rentBetter = m.rent.net >= fp.net;
+    const pay = fProfit ? "" : ` Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
+    const compare = rentBetter
+      ? ` Renting power from 2G comes out ${gap} ahead${soonerTxt} — nothing sunk into generators and ${fmt(a.rentUptime.v)}% guaranteed uptime.`
+      : ` That is ${gap} ahead of renting from 2G on paper, but only if the equipment lands on time and holds the assumed uptime.`;
+    return `${lead}.${pay}${compare}`;
+  })();
+
+  return (
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: FONT, padding: "0 0 60px" }}>
+
+      {/* header — logo (never "2G" as text) + headline-underline title */}
+      <div style={{ background: C.panel, borderBottom: `1px solid ${C.line}`, padding: "18px 28px", display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+        {/* honest attribution — 2G built it, but the tool leads with the miner's question, not a pitch */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, flexShrink: 0 }}>
+          <span style={{ fontFamily: mono, fontSize: 7.5, letterSpacing: ".16em", color: C.muted, textTransform: "uppercase" }}>Built by</span>
+          <img src={LOGO_2G_URI} alt="2G Energy Rental" style={{ height: 30, width: 30 * LOGO_RATIO, display: "block" }} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+          {/* headline with the 2G light-green highlighter device behind the lower third of the text */}
+          <div style={{ whiteSpace: "nowrap", lineHeight: 1.15 }}>
+            <span style={{
+              fontFamily: FONT, fontWeight: 700, fontSize: "clamp(19px, 4.6vw, 34px)", color: "#333",
+              backgroundImage: `linear-gradient(180deg, transparent 58%, ${C.greenLt} 58%)`,
+              padding: "0 5px 3px", boxDecorationBreak: "clone", WebkitBoxDecorationBreak: "clone",
+            }}>
+              Bitcoin Mining Calculator
+            </span>
+          </div>
+          <div style={{ fontFamily: mono, fontSize: 11, color: C.muted, letterSpacing: ".04em" }}>
+            Will your mine pay? Check any rig against your real power cost — grid, gas, or hosted. · <strong style={{ color: C.text }}>budgetary, not a quote</strong>
+          </div>
+        </div>
+        <div className="no-print" style={{ marginLeft: "auto", display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+          <button
+            onClick={() => window.print()}
+            style={{ padding: "8px 14px", background: C.green, border: "none", color: "#fff", fontFamily: mono, fontSize: 12, fontWeight: 700, borderRadius: 4, cursor: "pointer" }}>
+            ⬇ PRINT / PDF
+          </button>
+          <button
+            onClick={copyLink}
+            style={{ padding: "8px 14px", background: "transparent", border: `1px solid ${C.green}`, color: C.green, fontFamily: mono, fontSize: 12, fontWeight: 700, borderRadius: 4, cursor: "pointer" }}>
+            {copied ? "✓ LINK COPIED" : "🔗 COPY LINK"}
+          </button>
+          <button
+            onClick={emailScenario}
+            title="Opens your email app with this scenario — nothing is sent until you hit send"
+            style={{ padding: "8px 14px", background: "transparent", border: `1px solid ${C.line}`, color: C.muted, fontFamily: mono, fontSize: 12, fontWeight: 700, borderRadius: 4, cursor: "pointer" }}>
+            ✉ EMAIL IT
+          </button>
+        </div>
+      </div>
+
+      {/* mode switcher — A: "does mining pay?" (neutral front door) · B: "power a site" */}
+      <div className="no-print" style={{ display: "flex", justifyContent: "center", gap: 8, padding: "16px 20px 0", flexWrap: "wrap" }}>
+        <button style={{ ...segBtn(mode === "A"), flex: "none", padding: "9px 18px" }} onClick={() => setMode("A")}>DOES MINING PAY?</button>
+        <button style={{ ...segBtn(mode === "B"), flex: "none", padding: "9px 18px" }} onClick={() => setMode("B")}>POWER A SITE</button>
+      </div>
+
+      {mode === "A" && (
+        <ModeAView a={a} setA={editA} mA={mA} live={live} fetchLive={fetchLive}
+          goToSiteMode={() => setMode("B")} goToGas={() => { setMode("B"); setSizeBy("gas"); }} />
+      )}
+
+      <div className="proforma-grid" style={{ display: mode === "B" ? "grid" : "none", gridTemplateColumns: "290px 1fr", gap: 22, padding: "22px 28px", maxWidth: 1300, margin: "0 auto" }}>
+
+          {/* ---------- assumptions rail ---------- */}
+          <div className="no-print">
+            {simple ? (
+              /* SIMPLE rail — 4 core inputs only, friendly labels + ⓘ tooltips. No overflow clip so the
+                 tooltips can escape the card. The scenario cards (in the results column) set everything else. */
+              <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: 18, position: "sticky", top: 16 }}>
+                <SectionTitle>The basics</SectionTitle>
+                <div style={{ fontSize: 11, color: C.muted, marginBottom: 14, lineHeight: 1.5 }}>
+                  Set these four, then pick a scenario on the right. Everything else uses sensible defaults.
+                </div>
+                <SiteSizer a={a} setA={editA} sizeBy={sizeBy} setSizeBy={setSizeBy} />
+                <NumInput k="gasPrice" a={a} setA={editA} label="Your gas price ($/MCF)" tip="Price of the stranded or flared gas that fuels the gensets, per thousand cubic feet (MCF). Cheaper gas = cheaper power." />
+                <NumInput k="btcPrice" a={a} setA={editA} label="Bitcoin price ($)"   tip="Today's BTC price — it drives mining revenue. Use ↻ Fetch live below to pull the current spot price." />
+                <NumInput k="years"    a={a} setA={editA} label="Years to compare"    tip="The head-to-head horizon. All net-cash and payback figures are measured over this many years." />
+                <CoolingToggle a={a} setA={editA} />
+                <button
+                  onClick={fetchLive}
+                  disabled={live && live.state === "loading"}
+                  style={{ ...segBtn(false), width: "100%", margin: "4px 0 6px", cursor: live && live.state === "loading" ? "wait" : "pointer" }}>
+                  {live && live.state === "loading" ? "↻ FETCHING…" : "↻ FETCH LIVE BTC"}
+                </button>
+                {live && (
+                  <div style={{ fontSize: 10, lineHeight: 1.45, marginBottom: 10, fontFamily: mono,
+                    color: live.state === "err" ? C.red : live.state === "ok" ? C.green : C.muted }}>
+                    {live.msg}
+                  </div>
+                )}
+                <button
+                  onClick={() => setSimple(false)}
+                  style={{ ...segBtn(false), width: "100%", marginTop: 6 }}>
+                  ⚙ ADVANCED — ALL ASSUMPTIONS
+                </button>
+              </div>
+            ) : (
+              /* ADVANCED rail — the full assumption set (this scrolls, so no Info tooltips live here). */
+              <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: 18, position: "sticky", top: 16, maxHeight: "calc(100vh - 32px)", overflowY: "auto" }}>
+                <button
+                  onClick={() => { setSimple(true); setDynamic(true); }}
+                  style={{ ...segBtn(false), width: "100%", marginBottom: 12 }}>
+                  ◐ SIMPLE VIEW
+                </button>
+                <label style={labelStyle}>Market model</label>
+                <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+                  <button style={segBtn(dynamic)} onClick={() => setDynamic(true)}>DYNAMIC</button>
+                  <button style={segBtn(!dynamic)} onClick={() => setDynamic(false)}>STATIC</button>
+                </div>
+                <div style={{ fontSize: 10.5, color: C.muted, marginBottom: 14, lineHeight: 1.45 }}>
+                  {dynamic
+                    ? "Models genset lead time, hashrate growth, and the ≈Apr 2028 halving. Use this with customers."
+                    : "Frozen snapshot of today's economics — no lead times, no halving, no difficulty growth."}
+                </div>
+                <button
+                  onClick={fetchLive}
+                  disabled={live && live.state === "loading"}
+                  style={{ ...segBtn(false), width: "100%", marginBottom: 6, cursor: live && live.state === "loading" ? "wait" : "pointer" }}>
+                  {live && live.state === "loading" ? "↻ FETCHING…" : "↻ FETCH LIVE BTC + HASHRATE"}
+                </button>
+                {live && (
+                  <div style={{ fontSize: 10, lineHeight: 1.45, marginBottom: 14, fontFamily: mono,
+                    color: live.state === "err" ? C.red : live.state === "ok" ? C.green : C.muted }}>
+                    {live.msg}
+                  </div>
+                )}
+                <SectionTitle>Assumptions</SectionTitle>
+                <SiteSizer a={a} setA={editA} sizeBy={sizeBy} setSizeBy={setSizeBy} />
+                {Object.keys(groups).map((grp) => (
+                  <div key={grp}>
+                    <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".12em", textTransform: "uppercase", color: C.green, margin: "12px 0 8px" }}>{grp}</div>
+                    {grp === "Mining hardware" && <CoolingToggle a={a} setA={editA} />}
+                    {groups[grp].map((k) => <NumInput key={k} k={k} a={a} setA={editA} />)}
+                  </div>
+                ))}
+                <button onClick={() => { setA(applyPatch(DEFAULTS, PRESETS.bridge.patch)); setPreset("bridge"); }} style={{ ...segBtn(false), width: "100%", marginTop: 4 }}>RESET TO DEFAULTS</button>
+              </div>
+            )}
+          </div>
+
+          {/* ---------- results ---------- */}
+          <div className="results-col">
+
+            {/* deal-shape selector (screen only) — reframes the headline takeaway + net-cash banner
+                around one of the three shapes. The full three-way comparison always renders below. */}
+            <div className="no-print" style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "12px 16px", marginBottom: 14 }}>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: ".1em", textTransform: "uppercase", color: C.muted, marginRight: 4 }}>Deal shape</span>
+                {Object.values(SHAPES).map((s) => (
+                  <button key={s.key} style={{ ...segBtn(focus === s.key), flex: "none", padding: "8px 14px" }} onClick={() => setFocus(s.key)}>
+                    {s.btn}
+                  </button>
+                ))}
+              </div>
+              <div style={{ fontSize: 11.5, color: C.muted, marginTop: 7, fontFamily: mono, lineHeight: 1.5 }}>
+                {fp.desc}
+              </div>
+            </div>
+
+            {/* earned CTA — only when renting actually wins the comparison and the site profits */}
+            {m.rent.net >= m.own.net && m.best2G >= 0 && (
+              <EarnedCTA
+                headline="On these numbers, renting power wins."
+                sub={`Renting from 2G nets ${moneyM(m.rent.net)} — ${moneyM(m.rent.net - m.own.net)} better than buying your own gensets, deployed in weeks instead of waiting on genset lead times, at ${fmt(a.rentUptime.v)}% guaranteed uptime with no capital sunk in generators.`}
+              />
+            )}
+
+            {/* print-only assumptions block — the on-screen input rail is hidden in print, so a
+                sophisticated (O&G finance) reader can still see "at what assumptions" on the one-pager */}
+            <div className="print-only print-card" style={{ border: `1px solid ${C.line}`, borderRadius: 6, padding: "12px 16px", marginBottom: 14 }}>
+              <div style={{ fontWeight: 700, color: C.green, marginBottom: 8, fontSize: 13 }}>
+                Assumptions — {preset ? PRESETS[preset].label : "Custom"} · {dynamic ? "Dynamic" : "Static"} market · {yrs}-yr horizon
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "3px 18px", fontSize: 11 }}>
+                {[
+                  ["Site size", fmt(a.siteKW.v) + " kW"],
+                  ["Stranded gas", "$" + a.gasPrice.v.toFixed(2) + "/MCF"],
+                  ["BTC price", money(a.btcPrice.v)],
+                  ["Network hashrate", fmt(a.netHashEH.v) + " EH/s"],
+                  ["Hashrate growth", fmt(a.hashGrowth.v) + "%/yr"],
+                  ["Months to halving", fmt(a.halvingMo.v)],
+                  ["ASIC", fmt(a.hashTH.v) + " TH @ " + a.drawKW.v + " kW"],
+                  ["ASIC price", money(a.asicPrice.v)],
+                  ["Owned genset", money(a.msrpPerKW.v) + "/kW · " + fmt(a.ownedLagMo.v) + "-mo lead"],
+                  ["Owned uptime", fmt(a.ownUptime.v) + "%"],
+                  ["2G rate", money(a.rentalRate.v) + "/kW/mo"],
+                  ["2G uptime", fmt(a.rentUptime.v) + "%"],
+                  ["Grid power", "$" + a.gridRate.v.toFixed(2) + "/kWh ×" + a.gridUplift.v + " · " + fmt(a.gridLagMo.v) + "-mo wait"],
+                  ["Discount rate", a.discRate.v > 0 ? fmt(a.discRate.v) + "%/yr" : "off (nominal)"],
+                ].map(([l, v]) => (
+                  <div key={l} style={{ display: "flex", justifyContent: "space-between", gap: 8, borderBottom: `1px solid ${C.line}`, padding: "2px 0" }}>
+                    <span style={{ color: C.muted }}>{l}</span><span style={{ fontWeight: 600 }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 9.5, color: C.muted, marginTop: 8 }}>Budgetary — not a quote. Assumptions are adjustable; verify market data before use.</div>
+            </div>
+
+            {/* plain-language takeaway — one English sentence read straight off the model, for a novice.
+                Card treatment keys off `fProfit` (the focused deal shape's own profitability), not off 2G
+                winning: a losing shape must never be dressed as good news, even when 2G is the better of two losses. */}
+            <div style={{
+              background: fProfit ? C.greenLt : C.panel2,
+              border: `1px solid ${fProfit ? C.green : C.red}`,
+              borderRadius: 6, padding: "14px 18px", marginBottom: 14, display: "flex", gap: 12, alignItems: "flex-start",
+            }}>
+              <span style={{ fontSize: 18, lineHeight: 1.35, flexShrink: 0 }}>{fProfit ? "💡" : "⚠️"}</span>
+              <div style={{ fontSize: 15, lineHeight: 1.5, color: "#1a1a1a", fontWeight: 500 }}>{takeaway}</div>
+            </div>
+
+            {/* signature banner — leads with the ABSOLUTE verdict (does this site make money at all?).
+                The 2G-vs-owned advantage is a gap between two outcomes that can BOTH be losses, so it's
+                kept but demoted to a supporting line rather than presented as the headline number. */}
+            <div style={{ background: C.panel, border: `1px solid ${fProfit ? C.green : C.red}`, borderRadius: 6, padding: "18px 22px", marginBottom: 14, display: "flex", gap: 28, alignItems: "center", flexWrap: "wrap" }}>
+              <div>
+                <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: ".12em", textTransform: "uppercase", color: C.muted }}>
+                  {yrs}-year net cash · {fp.verb}
+                </div>
+                <div style={{ fontFamily: mono, fontSize: 38, fontWeight: 600, color: fProfit ? C.green : C.red, lineHeight: 1.15 }}>
+                  {money(fp.net)}
+                </div>
+                <div style={{ fontSize: 12.5, color: C.text, fontWeight: 600, maxWidth: 460, lineHeight: 1.45 }}>
+                  {fProfit
+                    ? `This site nets ${moneyM(fp.net)} over ${yrs} years by ${fp.verb}.`
+                    : `This site loses ${moneyM(Math.abs(fp.net))} over ${yrs} years — mining doesn't cover the cost of power at these assumptions.`}
+                </div>
+                {!fProfit && fixHint && (
+                  <div style={{ fontSize: 12, color: C.green, fontWeight: 700, marginTop: 6, maxWidth: 460, lineHeight: 1.45 }}>
+                    {fixHint}
+                  </div>
+                )}
+                <div style={{ fontSize: 12, color: C.muted, marginTop: 5 }}>
+                  vs {cmpLabel}:{" "}
+                  <strong style={{ color: (fp.net - cmpNet) >= 0 ? C.green : C.owned }}>
+                    {money(fp.net - cmpNet)} {(fp.net - cmpNet) >= 0 ? "better" : "worse"}
+                  </strong>
+                  {m.discRate > 0 && (
+                    <span> · NPV @ {fmt(m.discRate)}%: {money(fp.npv - cmpNpv)} advantage</span>
+                  )}
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 24, marginLeft: "auto", flexWrap: "wrap" }}>
+                {[
+                  ["First hash", dynamic ? `Mo ${fmt(m.firstHashRent)} vs Mo ${fmt(m.firstHashOwn)}` : "same day", "The month each path mines its first bitcoin. 2G deploys from inventory; owned generation waits on genset lead time."],
+                  ["Uptime advantage", "+" + fmt(m.uptimeDeltaPts, 0) + " pts", "Extra percentage points of run-time from the 2G guaranteed-uptime fleet vs a self-operated one. More uptime = more mining hours."],
+                  ["Genset cost avoided", money(m.genCapex), "Up-front cash you don't spend on buying generators — 2G supplies the fleet, so that capital stays in the business."],
+                  ["Profitable above", viable == null ? "—" : money(viable), "The bitcoin price this project needs just to break even — below it, mining doesn't cover the cost of power on any path. This is the real go / no-go number."],
+                  ["2G-vs-owned crossover", be == null ? (m.advantage >= 0 ? "2G always ahead" : "owned always ahead") : money(be), "Above this price renting 2G beats building your own; below it, owning edges ahead. Note: this only compares the two — both can still be losses below the 'Profitable above' price."],
+                ].map(([l, v, tip]) => (
+                  <div key={l}>
+                    <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: C.muted, display: "flex", alignItems: "center" }}>{l}{tip && <Info>{tip}</Info>}</div>
+                    <div style={{ fontFamily: mono, fontSize: 19, fontWeight: 600, color: C.text }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* BTC price sensitivity strip */}
+            {/* auto-fit, not repeat(3,…): three fixed columns don't fit a 375px phone */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10, marginBottom: 14 }}>
+              {sens.map((s) => {
+                const win = s.adv >= 0;
+                return (
+                  <div key={s.name} style={{ background: C.panel, border: `1px solid ${s.name === "Base" ? C.line : C.line}`, borderRadius: 6, padding: "10px 14px" }}>
+                    <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: C.muted }}>
+                      {s.name} · BTC {money(s.price / 1000, 0)}k
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5, fontFamily: mono, fontSize: 12.5 }}>
+                      <span style={{ color: C.muted }}>2G {moneyM(s.best2G)}</span>
+                      <span style={{ color: C.muted }}>Own {moneyM(s.own)}</span>
+                    </div>
+                    <div style={{ fontFamily: mono, fontSize: 15, fontWeight: 600, marginTop: 3, color: win ? C.green : C.amber }}>
+                      {win ? "2G +" : "Own +"}{moneyM(Math.abs(s.adv))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* mining engine strip */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 14 }}>
+              {[
+                ["ASICs deployed", fmt(m.nASIC, 0), "Number of mining machines the site's power can run. Each rig here is a current-gen " + (activeCooling(a) ? COOLING[activeCooling(a)].name + " " : "") + "ASIC."],
+                ["Fleet hashrate", fmt(m.fleetTH / 1000, 0) + " PH/s", "Total computing power of the fleet. PH/s = petahash per second (1,000 TH/s). More hashrate = a bigger share of the network's rewards."],
+                ["BTC mined / day", fmt(m.dailyBTC, 4), "Bitcoin the fleet earns per day at 100% uptime and today's network difficulty."],
+                ["Rev / day @ 100%, today", money(m.baseRevDay), "Daily mining revenue in dollars at full uptime and today's BTC price, before power and pool costs."],
+                ["Implied hashprice", "$" + fmt(m.hashprice, 2) + "/PH/day", "Industry yardstick: dollars a miner earns per petahash per day. It falls as the network grows and after each halving."],
+              ].map(([l, v, tip]) => (
+                <div key={l} style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "10px 12px" }}>
+                  <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".08em", textTransform: "uppercase", color: C.muted, display: "flex", alignItems: "center" }}>{l}{tip && <Info>{tip}</Info>}</div>
+                  <div style={{ fontFamily: mono, fontSize: 17, fontWeight: 600, color: C.text, marginTop: 2 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* cost-check strip — per-ASIC price + up-front capital, laid out so a buyer can verify
+                the numbers at a glance. This is the capital-preservation story in one card. */}
+            {(() => {
+              const ownsRigs = m.hwCapex <= 0;
+              const upfront2G = m.hwCapex;                 // miners only — gensets are rented
+              const upfrontOwn = m.hwCapex + m.genCapex;   // miners + gensets bought outright
+              const CostRow = ({ label, detail, amount, strong, tone }) => (
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, padding: "7px 0", borderBottom: `1px solid ${C.line}` }}>
+                  <div style={{ fontSize: 13, fontWeight: strong ? 700 : 500, color: tone || C.text, whiteSpace: "nowrap" }}>{label}</div>
+                  <div style={{ fontSize: 11.5, color: C.muted, fontFamily: mono, flex: 1, textAlign: "right", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis" }}>{detail}</div>
+                  <div style={{ fontFamily: mono, fontSize: strong ? 15 : 13.5, fontWeight: strong ? 700 : 500, color: tone || C.text, textAlign: "right", width: 118, whiteSpace: "nowrap" }}>{amount}</div>
+                </div>
+              );
+              return (
+                <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "14px 18px", marginBottom: 14 }}>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: 6 }}>
+                    <SectionTitle>What it costs to start</SectionTitle>
+                    <Info>Up-front cash to get mining. Renting 2G power means you buy no generators — the biggest line item — so your capital goes into miners, not iron you can't un-buy.</Info>
+                  </div>
+                  <CostRow
+                    label="Miners (ASICs)"
+                    detail={ownsRigs ? "you already own them" : `${fmt(m.nASIC, 0)} units × ${money(a.asicPrice.v)} each`}
+                    amount={ownsRigs ? "$0" : money(m.hwCapex)} />
+                  <CostRow
+                    label="2G generators"
+                    detail={`rented · ${money(a.rentalRate.v)}/kW/mo, nothing up front`}
+                    amount="$0" />
+                  <div style={{ height: 6 }} />
+                  <CostRow
+                    label="Up-front to rent 2G"
+                    detail="miners only — no generators to buy"
+                    amount={money(upfront2G)} strong tone={C.green} />
+                  <CostRow
+                    label="Up-front to build your own"
+                    detail={`+ ${money(m.genCapex)} in gensets (${money(a.msrpPerKW.v)}/kW × ${fmt(a.siteKW.v, 0)} kW)`}
+                    amount={money(upfrontOwn)} tone={C.owned} />
+                  <div style={{ marginTop: 9, fontSize: 12.5, color: C.text }}>
+                    <strong style={{ color: C.green }}>{money(m.genCapex)}</strong> of capital stays in your pocket by renting instead of buying generators.
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* cumulative cash chart */}
+            <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: 18, marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, flexWrap: "wrap" }}>
+                <div style={{ flex: 1, minWidth: 260 }}>
+                  <SectionTitle>Cumulative cash position — {yrs} years{dynamic ? " (lead times, halving & difficulty growth modeled)" : " (static snapshot)"}</SectionTitle>
+                </div>
+                <div className="no-print" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: ".08em", textTransform: "uppercase", color: C.muted }}>Horizon</span>
+                  <button style={{ ...segBtn(false), flex: "none", width: 30, padding: "6px 0" }}
+                    onClick={() => setA({ ...a, years: { ...a.years, v: Math.max(a.years.min, a.years.v - 1) } })}>−</button>
+                  <div style={{ width: 44, textAlign: "center", fontFamily: mono, fontSize: 15, color: C.green, fontWeight: 600 }}>{fmt(a.years.v)} yr</div>
+                  <button style={{ ...segBtn(false), flex: "none", width: 30, padding: "6px 0" }}
+                    onClick={() => setA({ ...a, years: { ...a.years, v: Math.min(a.years.max, a.years.v + 1) } })}>+</button>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 18, marginBottom: 8, fontFamily: mono, fontSize: 11.5, flexWrap: "wrap" }}>
+                <span style={{ color: C.green, fontWeight: 700 }}>■ Rent power from 2G</span>
+                <span style={{ color: C.owned }}>■ Buy your own gensets</span>
+                <span style={{ color: C.grid }}>■ Buy grid power</span>
+                {dynamic && a.halvingMo.v < m.months && <span style={{ color: C.red }}>┆ halving (issuance −50%)</span>}
+              </div>
+              <div style={{ fontSize: 11.5, color: C.muted, marginBottom: 8, lineHeight: 1.5 }}>
+                You buy the miners (ASICs) in every case — the only difference is the power: rent it from 2G, buy your own gensets, or buy grid power.
+              </div>
+              <CashChart m={m} halvingMo={a.halvingMo.v} dynamic={dynamic} />
+              <div className="x-scroll">
+              <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 12 }}>
+                <thead>
+                  <tr style={{ borderBottom: `2px solid ${C.line}` }}>
+                    {["Path", "First hash", <span key="tv">Generators left at end<Info>What your generators are worth at the end. Owned gensets keep a resale value; with 2G rental you own no generators, so there's nothing to resell — and nothing that can strand if mining slows.</Info></span>, `Net cash @ ${yrs} yrs`, ...(m.discRate > 0 ? [`NPV @ ${fmt(m.discRate)}%`] : [])].map((h, i) => (
+                      <th key={i} style={{ padding: "6px 10px", fontFamily: mono, fontSize: 10.5, letterSpacing: ".06em", textTransform: "uppercase", color: i === 4 ? C.green : C.muted, textAlign: i === 0 ? "left" : "right", fontWeight: i === 4 ? 700 : 500 }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["Rent power from 2G", m.firstHashRent, 0, m.rent.net, m.rent.npv, C.green, "rent"],
+                    ["Buy your own gensets", m.firstHashOwn, m.own.terminal, m.own.net, m.own.npv, C.owned, "own"],
+                    ["Buy grid power", m.firstHashGrid, m.grid.terminal, m.grid.net, m.grid.npv, C.grid, "grid"],
+                  ].map(([name, fh, term, net, npv, col, fkey]) => (
+                    <tr key={name} style={{ borderBottom: `1px solid ${C.line}`, background: fkey === focus ? col + "14" : "transparent" }}>
+                      <td style={{ padding: "7px 10px", fontSize: 13, color: col, fontWeight: 600 }}>{fkey === focus ? "▶ " : ""}{name}</td>
+                      <td style={{ padding: "7px 10px", fontFamily: mono, fontSize: 13, textAlign: "right" }}>{dynamic ? "Month " + fmt(fh) : "Day 1"}</td>
+                      <td style={{ padding: "7px 10px", fontFamily: mono, fontSize: 13, textAlign: "right" }}>{money(term)}</td>
+                      <td style={{ padding: "7px 10px", fontFamily: mono, fontSize: 14, textAlign: "right", color: col, fontWeight: 600 }}>{money(net)}</td>
+                      {m.discRate > 0 && <td style={{ padding: "7px 10px", fontFamily: mono, fontSize: 14, textAlign: "right", color: col, fontWeight: 600 }}>{money(npv)}</td>}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              </div>
+            </div>
+
+            {/* steady-state annual table */}
+            <div className="print-tall x-scroll" style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "14px 8px 6px", marginBottom: 14, overflowX: "auto" }}>
+              <div style={{ padding: "0 10px" }}>
+                <SectionTitle>Steady-state annual run rate — both systems deployed, today's network</SectionTitle>
+                <button
+                  className="no-print"
+                  onClick={() => setShowDetail((s) => !s)}
+                  style={{ ...segBtn(false), width: "100%", marginBottom: showDetail ? 12 : 0, textAlign: "left", padding: "8px 12px" }}>
+                  {showDetail ? "▾ HIDE THE DETAILED ANNUAL NUMBERS" : "▸ SHOW THE DETAILED ANNUAL NUMBERS"}
+                </button>
+              </div>
+              <div className="detail-body" style={{ display: showDetail ? "block" : "none" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ borderBottom: `2px solid ${C.line}` }}>
+                    {["", `Own gensets (${fmt(a.ownUptime.v)}% uptime)`, `Rent 2G (${fmt(a.rentUptime.v)}% guaranteed)`, `Buy grid (${fmt(a.gridUptime.v)}% uptime)`, "2G vs own"].map((h, i) => (
+                      <th key={i} style={{ padding: "6px 10px", fontFamily: mono, fontSize: 10.5, letterSpacing: ".06em", textTransform: "uppercase", color: i === 2 ? C.green : i === 3 ? C.grid : C.muted, textAlign: i === 0 ? "left" : "right", fontWeight: i === 2 ? 700 : 500 }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <Head label="Generation & energy" />
+                  <Row label="Annual kWh delivered" own={m.sOwn.kwh} rent={m.sRent.kwh} grid={m.sGrid.kwh} diff={m.sRent.kwh - m.sOwn.kwh} unit="" />
+                  <Row label="Annual MCF gas consumed" own={m.sOwn.mcf} rent={m.sRent.mcf} grid={m.sGrid.mcf} diff={m.sRent.mcf - m.sOwn.mcf} unit="" />
+                  <Head label="Mining revenue (after pool fee)" />
+                  <Row label="Gross mining revenue" own={m.sOwn.rev} rent={m.sRent.rev} grid={m.sGrid.rev} diff={m.sRent.rev - m.sOwn.rev} strong />
+                  <Head label="Operating expenses" />
+                  <Row label="Fuel / gas cost" own={m.sOwn.fuel} rent={m.sRent.fuel} grid={0} diff={m.sRent.fuel - m.sOwn.fuel} goodIsPositive={false} />
+                  <Row label="Rental expense" own={0} rent={m.sRent.rental} grid={0} diff={m.sRent.rental} goodIsPositive={false} />
+                  <Row label="Grid power purchased" own={0} rent={0} grid={m.sGrid.power} diff={0} goodIsPositive={false} />
+                  <Row label="Maintenance, parts & labor" own={m.sOwn.maint} rent={0} grid={0} diff={-m.sOwn.maint} goodIsPositive={false} />
+                  <Row label="Other site opex" own={m.sOwn.other} rent={0} grid={0} diff={-m.sOwn.other} goodIsPositive={false} />
+                  <Row label="Total operating expenses" own={m.sOwn.opex} rent={m.sRent.opex} grid={m.sGrid.opex} diff={m.sRent.opex - m.sOwn.opex} strong goodIsPositive={false} />
+                  <Head label="Cash flow" />
+                  <Row label="Operating cash flow" own={m.sOwn.ocf} rent={m.sRent.ocf} grid={m.sGrid.ocf} diff={m.sRent.ocf - m.sOwn.ocf} strong />
+                  <Row label="Initial CapEx (power + miners)" own={m.sOwn.capex} rent={m.sRent.capex} grid={m.sGrid.capex} diff={m.sRent.capex - m.sOwn.capex} goodIsPositive={false} />
+                  <Row label="Simple payback (years)" own={m.sOwn.payback} rent={m.sRent.payback} grid={m.sGrid.payback} diff={null} unit="" d={1} />
+                  <Head label="Key metrics" />
+                  <Row label="Effective power cost (¢/kWh)" own={m.sOwn.powerCost} rent={m.sRent.powerCost} grid={m.sGrid.powerCost} diff={m.sRent.powerCost - m.sOwn.powerCost} unit="" d={2} goodIsPositive={false} />
+                  <Row label={`LCOE (¢/kWh) @ ${fmt(a.years.v, 0)}-yr amortization`} own={m.sOwn.lcoe} rent={m.sRent.lcoe} grid={m.sGrid.lcoe} diff={null} unit="" d={2} />
+                </tbody>
+              </table>
+              <div style={{ padding: "8px 10px", fontSize: 10.5, color: C.muted, fontFamily: mono, lineHeight: 1.5 }}>
+                Snapshot at today's network — the multi-year chart above is where lead times, the halving, and difficulty growth are applied.
+                Note the steady-state comparison alone favors owning; the 2G case is built on time-to-power, uptime, capital preservation, and exit optionality.
+              </div>
+              </div>
+            </div>
+
+            {/* exec summary */}
+            <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: 18 }}>
+              <SectionTitle>Executive summary</SectionTitle>
+              <div style={{ fontSize: 13.5, lineHeight: 1.7, color: C.text }}>
+                {/* Viability verdict first — an exec's first question is "does this pencil?", and the
+                    2G-vs-owned advantage below is a gap that can sit between two losses. */}
+                {profitable ? (
+                  <>
+                    <b style={{ color: C.green }}>At {btcTxt}, this project pencils.</b> Renting 2G power
+                    nets {money(m.best2G)} over {yrs} years against {money(m.own.net)} for
+                    owned generation.{" "}
+                  </>
+                ) : (
+                  <>
+                    <b style={{ color: C.red }}>At {btcTxt}, this project does not pencil.</b> Renting 2G power
+                    nets {money(m.best2G)} over {yrs} years and owned generation
+                    {" "}{money(m.own.net)} — mining revenue does not cover the cost of power at these assumptions
+                    {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}. Everything below
+                    compares two losing paths: read it as path selection, not as a business case.{" "}
+                  </>
+                )}
+                <b style={{ color: C.green }}>Time to power is the decisive variable.</b> Factory lead times for MW-class
+                natural gas gensets now run roughly a year or more, and large gas turbines are quoting 3–5 years — while a 2G
+                rental fleet deploys from inventory in weeks. In this model the owned path hashes its first block
+                in month {fmt(m.firstHashOwn)}; the 2G path in month {fmt(m.firstHashRent)}. Every month of waiting burns the
+                richest remaining hashprice: network difficulty compounds at {fmt(a.hashGrowth.v)}%/yr in this model and the
+                next halving (~April 2028) cuts issuance in half.
+                {" "}<b style={{ color: advPositive ? C.green : C.owned }}>
+                  The 2G path is {money(Math.abs(m.advantage))} {advPositive ? "better" : "worse"} than owning over {yrs} years
+                </b> in the current scenario
+                {!profitable && (advPositive ? <> — a smaller loss, not a profit</> : <>, and both are losses</>)}. It
+                avoids {money(m.genCapex)} of generation CapEx, carries a {fmt(a.rentUptime.v)}% uptime
+                guarantee with full service (owner-operated wellhead fleets typically achieve 80–90%), and preserves the
+                option to demobilize if mining economics deteriorate — owned iron cannot be un-bought.
+                {" "}<b style={{ color: C.grid }}>Buying grid power is the third option — and usually the weakest.</b> A new
+                large load faces a multi-year interconnection queue ({dynamic ? fmt(a.gridLagMo.v) + " months to first hash here" : "modeled as instant in static mode"})
+                and an all-in delivered cost near {fmt(m.sGrid.powerCost, 1)}¢/kWh once demand and capacity charges layer on top
+                of the ${a.gridRate.v.toFixed(2)}/kWh headline rate — above what mining revenue supports at today's hashprice.
+                Where genuinely cheap, available grid power exists, that math flips: lower the grid rate and the model will show it.
+              </div>
+              <div style={{ fontSize: 11, color: C.muted, marginTop: 12, lineHeight: 1.6, fontFamily: mono }}>
+                Verified Jul 2026: BTC ≈ $62–64k · network ≈ 940 EH/s (peaked &gt;1,000 EH/s early 2026) · hashprice ≈ $29/PH/day ·
+                {"current-gen " + (activeCooling(a) ? COOLING[activeCooling(a)].name + " " : "") + "ASIC " + fmt(a.hashTH.v) + " TH/s @ " + a.drawKW.v + " kW (" + (a.drawKW.v * 1000 / a.hashTH.v).toFixed(1) + " J/TH, ≈$" + (a.asicPrice.v / a.hashTH.v).toFixed(0) + "/TH)"} · MW-class NG genset factory deliveries quoting into late 2027 ·
+                professional wellhead-power operators guarantee ≈90% uptime. Adjustable assumptions: hashrate growth, BTC price path,
+                genset residual value, routine O&M and periodic top-end rebuilds (modeled as lump costs at each engine-hour threshold; levelized in the steady-state table).
+                {" "}Simplification, disclosed: all paths buy today's ASICs at today's price even when they deploy years out (owned/grid would really buy cheaper, more-efficient rigs later — this is slightly conservative *toward* 2G).
+                {" "}All figures budgetary and illustrative — actual results depend on miner efficiency, network conditions, pool fees, and gas contract terms.
+              </div>
+            </div>
+
+          </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+
+</script>
+</body>
+</html>
