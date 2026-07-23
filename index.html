@@ -43,6 +43,8 @@
   /* hover on desktop; TAP on a phone — the ⓘ is focusable (tabIndex 0), so a tap opens the bubble
      and tapping anywhere else (blur) closes it. No JS, works the same in both modes. */
   .tip:hover .tip-body, .tip:focus .tip-body, .tip:focus-within .tip-body { visibility: visible; opacity: 1; }
+  /* short button labels are the phone variant — hidden on desktop, swapped in by the media query */
+  .lbl-short { display: none; }
   .tip:focus { outline: none; }
   /* Phone/narrow layout (field use). */
   @media (max-width: 800px) {
@@ -51,6 +53,17 @@
        page sideways instead of scrolling inside their own card. */
     .proforma-grid { grid-template-columns: minmax(0, 1fr) !important; padding: 16px 12px !important; }
     .proforma-grid > *, .results-col > * { min-width: 0; }
+    /* ANSWER FIRST on a phone. Stacked in DOM order the input rail comes first, so the pitch started
+       ~1,100px down the page — you'd scroll past every assumption before reading a single number.
+       The results lead; the knobs sit underneath for anyone who wants them. */
+    .results-col { order: -1; }
+    /* the deal-shape blurb repeats what the buttons already say — screen real estate on a phone */
+    .shape-desc { display: none; }
+    /* short deal-shape labels so the three buttons hold one row instead of stacking three deep,
+       and drop the marketing subtitle: together they lift the hero number above the fold */
+    .lbl-long { display: none; }
+    .lbl-short { display: inline; }
+    .hero-sub { display: none; }
     /* On a phone the bubble docks to the bottom of the screen instead of floating next to the ⓘ —
        a bubble anchored to an icon near the screen edge would run off-screen at 375px. */
     .tip .tip-body { position: fixed; left: 12px; right: 12px; bottom: 14px; width: auto;
@@ -1155,13 +1168,13 @@ function App() {
   // The full three-way comparison always renders below; this only reframes the top so a rep can
   // walk each shape on its own. Default = renting 2G power (2G's offer).
   const SHAPES = {
-    rent: { key: "rent", btn: "BUY ASICS · RENT POWER (2G)", verb: "renting power from 2G", color: C.green,
+    rent: { key: "rent", btn: "BUY ASICS · RENT POWER (2G)", btnShort: "RENT (2G)", verb: "renting power from 2G", color: C.green,
       net: m.rent.net, npv: m.rent.npv,
       desc: "You buy the miners and rent your power from 2G — deployed from inventory in weeks, guaranteed uptime, no generators to buy." },
-    own: { key: "own", btn: "BUY ASICS · BUY GENSETS", verb: "buying your own gensets", color: C.owned,
+    own: { key: "own", btn: "BUY ASICS · BUY GENSETS", btnShort: "BUY GENSETS", verb: "buying your own gensets", color: C.owned,
       net: m.own.net, npv: m.own.npv,
       desc: "You buy the miners and buy your own gensets — the full DIY build. Big up-front capital and you wait on genset lead times." },
-    grid: { key: "grid", btn: "BUY ASICS · WAIT FOR GRID", verb: "waiting for grid power", color: C.grid,
+    grid: { key: "grid", btn: "BUY ASICS · WAIT FOR GRID", btnShort: "WAIT FOR GRID", verb: "waiting for grid power", color: C.grid,
       net: m.grid.net, npv: m.grid.npv,
       desc: "You buy the miners and wait for a utility interconnection — cheapest power on paper, but a multi-year queue before first hash." },
   };
@@ -1281,7 +1294,7 @@ function App() {
               Bitcoin Mining Calculator
             </span>
           </div>
-          <div style={{ fontFamily: mono, fontSize: 11, color: C.muted, letterSpacing: ".04em" }}>
+          <div className="hero-sub" style={{ fontFamily: mono, fontSize: 11, color: C.muted, letterSpacing: ".04em" }}>
             Will your mine pay? Check any rig against your real power cost — grid, gas, or hosted. · <strong style={{ color: C.text }}>budgetary, not a quote</strong>
           </div>
         </div>
@@ -1405,11 +1418,11 @@ function App() {
                 <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: ".1em", textTransform: "uppercase", color: C.muted, marginRight: 4 }}>Deal shape</span>
                 {Object.values(SHAPES).map((s) => (
                   <button key={s.key} style={{ ...segBtn(focus === s.key), flex: "none", padding: "8px 14px" }} onClick={() => setFocus(s.key)}>
-                    {s.btn}
+                    <span className="lbl-long">{s.btn}</span><span className="lbl-short">{s.btnShort}</span>
                   </button>
                 ))}
               </div>
-              <div style={{ fontSize: 11.5, color: C.muted, marginTop: 7, fontFamily: mono, lineHeight: 1.5 }}>
+              <div className="shape-desc" style={{ fontSize: 11.5, color: C.muted, marginTop: 7, fontFamily: mono, lineHeight: 1.5 }}>
                 {fp.desc}
               </div>
             </div>
