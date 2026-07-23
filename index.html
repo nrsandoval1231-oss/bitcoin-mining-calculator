@@ -250,16 +250,12 @@ const DEFAULTS = {
 };
 
 /* ---------- deal-shape presets ----------
-   Each preset is a *deal shape*, not a market guess. The default is the one that
-   makes money at today's spot: a miner who already owns rigs, renting 2G power for
-   ~2 years through the current high-reward window (before the ≈2028 halving). The
-   full-build and upside shapes are one click away and honest when selected. */
+   Each preset is a *deal shape*, not a market guess. Every shape BUYS the miners —
+   the customer who already owns a fleet is explicitly out of scope (Nick, 2026-07-23),
+   so no preset, lever or line of copy models a $0 hardware case. */
 const PRESETS = {
-  // Boot default. Buys the rigs — per Nick (2026-07-23), a customer very rarely already owns ASICs,
-  // so a $0 hardware line was the unrealistic case, not the realistic one. `asicPrice: 0` is still
-  // fully supported (type it in, or use the "rigs you already own" lever the copy suggests).
   bridge: {
-    label: "BRIDGE · BUY RIGS",
+    label: "BRIDGE · 2 YEARS",
     desc: "You buy your miners and rent 2G power for ~2 years through the current high-reward window — no generators bought, nothing stranded if mining slows.",
     patch: { asicPrice: 5650, years: 2, rentalRate: 38, btcPrice: 63000, priceGrowth: 5, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
   },
@@ -291,8 +287,8 @@ const COOLING = {
   imm:   { label: "IMMERSION", name: "immersion-cooled", short: "S21 XP Immersion", note: "Runs submerged in dielectric fluid; needs a tank + heat exchanger.", patch: { hashTH: 300, drawKW: 4.05, asicPrice: 4899 } },
 };
 // which cooling preset the current machine matches (null = hand-edited / custom).
-// Identified by the PHYSICAL specs (hash rate + draw), not price — price is a deal-shape
-// variable ($0 when you already own the rigs), so it must not decide the machine type.
+// Identified by the PHYSICAL specs (hash rate + draw), not price — a customer can negotiate
+// hardware pricing, and a discount shouldn't change which machine the tool thinks it is.
 function activeCooling(a) {
   return Object.keys(COOLING).find((key) =>
     a.hashTH.v === COOLING[key].patch.hashTH && a.drawKW.v === COOLING[key].patch.drawKW
@@ -640,12 +636,11 @@ function NumInput({ k, a, setA, label, tip }) {
 }
 
 /* Segmented AIR / HYDRO / IMMERSION toggle (renders one button per COOLING entry).
-   Swaps the machine's hash + draw as a set — and its price too, unless you already own
-   the rigs ($0). Highlights the matching preset, or nothing (custom) once hand-edited.
+   Swaps the machine's hash, draw and price as a set. Highlights the matching preset, or
+   nothing (custom) once hand-edited.
    Used in both rails. Add a cooling type by adding one entry to COOLING; the UI follows. */
 function CoolingToggle({ a, setA }) {
   const active = activeCooling(a);
-  const ownsRigs = a.asicPrice.v === 0; // "you already own them" deal shape
   const setCooling = (key) => {
     if (active === key) return; // already there — don't needlessly drop out of preset mode
     const p = COOLING[key].patch;
@@ -653,12 +648,12 @@ function CoolingToggle({ a, setA }) {
     Object.keys(a).forEach((k) => (next[k] = { ...a[k] }));
     next.hashTH = { ...next.hashTH, v: p.hashTH };
     next.drawKW = { ...next.drawKW, v: p.drawKW };
-    if (!ownsRigs) next.asicPrice = { ...next.asicPrice, v: p.asicPrice }; // keep $0 if you already own the rigs
+    next.asicPrice = { ...next.asicPrice, v: p.asicPrice };
     setA(next);
   };
   const jTH = (a.drawKW.v * 1000 / a.hashTH.v);
   const perTH = a.hashTH.v > 0 ? a.asicPrice.v / a.hashTH.v : 0;
-  const priceTxt = ownsRigs ? "rigs you own" : `≈$${perTH.toFixed(0)}/TH`;
+  const priceTxt = `≈$${perTH.toFixed(0)}/TH`;
   return (
     <div style={{ marginBottom: 12 }}>
       <label style={labelStyle}>ASIC cooling</label>
@@ -1185,10 +1180,10 @@ function App() {
     // A capital-payback shortfall needs the OPPOSITE horizon advice from an operating loss:
     // stretch the comparison out past payback, don't shorten it into a bridge.
     if (capexDriven) {
-      if (a.asicPrice.v > 0) parts.push("start from rigs you already own");
       // only if re-running the model at that horizon actually improves the outcome
       if (longerHorizon && longerHorizon.helps) parts.push(`compare over ${longerHorizon.years} years so the miners clear payback`);
       if (viable != null) parts.push(`get BTC above ${money(viable)}`);
+      parts.push("or negotiate the rig price down");
       const tail = longerHorizon && !longerHorizon.helps
         ? ` A longer horizon won't do it — difficulty growth and the halving outrun the payback.`
         : "";
@@ -1196,7 +1191,6 @@ function App() {
     }
     if (viable != null) parts.push(`get BTC above ${money(viable)}`);
     if (a.years.v > 2) parts.push("shorten to a ~2-year bridge through the halving");
-    if (a.asicPrice.v > 0) parts.push("start from rigs you already own");
     return parts.length ? `To make it pencil: ${parts.join(", ")}.` : "";
   })();
   // shared phrasing for the takeaway card + executive summary, so they can never disagree
@@ -1227,8 +1221,8 @@ function App() {
     // "neither path pays" is an OPERATING verdict — don't say it when the shortfall is capital payback
     const noPay = capexDriven
       ? (longerHorizon && longerHorizon.helps
-          ? ` Run it out to ${longerHorizon.years} years and the miners clear payback${longerHorizon.pays ? " and the project turns positive" : ""} — or start from rigs you already own.`
-          : ` A longer horizon doesn't rescue it: difficulty growth and the halving outrun the payback, so it takes cheaper rigs, rigs you already own, or a higher bitcoin price.`)
+          ? ` Run it out to ${longerHorizon.years} years and the miners clear payback${longerHorizon.pays ? " and the project turns positive" : ""}.`
+          : ` A longer horizon doesn't rescue it: difficulty growth and the halving outrun the payback, so it takes cheaper hardware or a higher bitcoin price.`)
       : ` Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
 
     if (focus === "rent") {
@@ -1559,7 +1553,6 @@ function App() {
             {/* cost-check strip — per-ASIC price + up-front capital, laid out so a buyer can verify
                 the numbers at a glance. This is the capital-preservation story in one card. */}
             {(() => {
-              const ownsRigs = m.hwCapex <= 0;
               const upfront2G = m.hwCapex;                 // miners only — gensets are rented
               const upfrontOwn = m.hwCapex + m.genCapex;   // miners + gensets bought outright
               const CostRow = ({ label, detail, amount, strong, tone }) => (
@@ -1577,8 +1570,8 @@ function App() {
                   </div>
                   <CostRow
                     label="Miners (ASICs)"
-                    detail={ownsRigs ? "you already own them" : `${fmt(m.nASIC, 0)} units × ${money(a.asicPrice.v)} each`}
-                    amount={ownsRigs ? "$0" : money(m.hwCapex)} />
+                    detail={`${fmt(m.nASIC, 0)} units × ${money(a.asicPrice.v)} each`}
+                    amount={money(m.hwCapex)} />
                   <CostRow
                     label="2G generators"
                     detail={`rented · ${money(a.rentalRate.v)}/kW/mo, nothing up front`}
@@ -1723,8 +1716,8 @@ function App() {
                         <i> today's</i> network, so a {yrs}-year window closes before payback — and because difficulty compounds
                         at {fmt(a.hashGrowth.v)}%/yr with the halving on top, {longerHorizon && longerHorizon.helps
                           ? <>stretching to {longerHorizon.years} years does help here</>
-                          : <>a longer horizon does not rescue it</>}. The real levers are rigs already owned, cheaper
-                        hardware, or a higher bitcoin price</>
+                          : <>a longer horizon does not rescue it</>}. The real levers are cheaper hardware
+                        or a higher bitcoin price</>
                       : <>mining revenue does not cover the cost of power at these assumptions
                         {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}</>}. Everything below
                     compares two losing paths: read it as path selection, not as a business case.{" "}
