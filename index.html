@@ -215,7 +215,10 @@ const DEFAULTS = {
   issuance:   { v: 450,    label: "Network BTC issued/day (pre-halving)",   grp: "Site & market", min: 0 },
   poolFee:    { v: 1.5,    label: "Pool fee (%)",                           grp: "Site & market", min: 0, max: 100 },
   hashGrowth: { v: 10,     label: "Network hashrate growth (%/yr)",         grp: "Site & market", min: -50, max: 200 },
-  priceGrowth:{ v: 0,      label: "BTC price growth (%/yr)",                grp: "Site & market", min: -50, max: 200 },
+  // 5%/yr: deliberately modest — it sits BELOW the 10%/yr difficulty growth this model also assumes,
+  // so revenue per rig still erodes. A number a skeptical miner won't argue with, and every headline
+  // that quotes the BTC price quotes this alongside it, so it's never a hidden thumb on the scale.
+  priceGrowth:{ v: 5,      label: "BTC price growth (%/yr)",                grp: "Site & market", min: -50, max: 200 },
   halvingMo:  { v: monthsUntilHalving(), label: "Months until halving (auto, ≈ Apr 2028)", grp: "Site & market", min: 0 },
   years:      { v: 5,      label: "Comparison horizon (years)",             grp: "Site & market", min: 1, max: 20 },
   discRate:   { v: 0,      label: "Discount rate (%/yr, for NPV — 0 = off)", grp: "Site & market", min: 0, max: 40 },
@@ -258,7 +261,7 @@ const PRESETS = {
   bridge: {
     label: "BRIDGE · BUY RIGS",
     desc: "You buy your miners and rent 2G power for ~2 years through the current high-reward window — no generators bought, nothing stranded if mining slows.",
-    patch: { asicPrice: 5650, years: 2, rentalRate: 38, btcPrice: 63000, priceGrowth: 0, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
+    patch: { asicPrice: 5650, years: 2, rentalRate: 38, btcPrice: 63000, priceGrowth: 5, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
   },
   build: {
     label: "FULL BUILD · NEW RIGS",
@@ -1199,9 +1202,14 @@ function App() {
   // shared phrasing for the takeaway card + executive summary, so they can never disagree
   const mwv = a.siteKW.v / 1000;
   const siteTxt = mwv >= 1 ? `${fmt(mwv, mwv < 10 ? 1 : 0)} MW` : `${fmt(a.siteKW.v, 0)} kW`;
-  const btcTxt = a.btcPrice.v >= 1000
+  // Every headline that quotes the BTC price also quotes the growth assumption riding underneath it.
+  // A reader who sees "BTC $63k" and doesn't know the model drifts it upward has been misled.
+  const growTxt = dynamic && a.priceGrowth.v !== 0
+    ? ` ${a.priceGrowth.v > 0 ? "+" : ""}${fmt(a.priceGrowth.v, 1)}%/yr`
+    : "";
+  const btcTxt = (a.btcPrice.v >= 1000
     ? `BTC $${fmt(a.btcPrice.v / 1000, a.btcPrice.v % 1000 === 0 ? 0 : 1)}k`
-    : `BTC ${money(a.btcPrice.v)}`;
+    : `BTC ${money(a.btcPrice.v)}`) + growTxt;
 
   // One-sentence, plain-English read of the model for a novice.
   // ALWAYS leads with the absolute outcome — does this project make money at all? — because the
