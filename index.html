@@ -1286,11 +1286,23 @@ function App() {
 
       {/* header — logo (never "2G" as text) + headline-underline title */}
       <div style={{ background: C.panel, borderBottom: `1px solid ${C.line}`, padding: "18px 28px", display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-        {/* honest attribution — 2G built it, but the tool leads with the miner's question, not a pitch */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, flexShrink: 0 }}>
-          <span style={{ fontFamily: mono, fontSize: 7.5, letterSpacing: ".16em", color: C.muted, textTransform: "uppercase" }}>Built by</span>
-          <img src={LOGO_2G_URI} alt="2G Energy Rental" style={{ height: 30, width: 30 * LOGO_RATIO, display: "block" }} />
-        </div>
+        {/* honest attribution — 2G built it, but the tool leads with the miner's question, not a pitch.
+            The logo links to the site's homepage ONLY when this copy is served from the Power Gap
+            Report site. On the neutral standalone copy (github.io / emailed file) there is no
+            homepage, and pointing it at the 2G-branded Report would turn the neutral tool into a
+            funnel — the thing that keeps it credible with miners. Same file, host-aware at runtime. */}
+        {(() => {
+          const onSite = typeof location !== "undefined" && /(^|\.)thepowergapreport\.com$/.test(location.hostname);
+          const logo = (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, flexShrink: 0 }}>
+              <span style={{ fontFamily: mono, fontSize: 7.5, letterSpacing: ".16em", color: C.muted, textTransform: "uppercase" }}>Built by</span>
+              <img src={LOGO_2G_URI} alt="2G Energy Rental" style={{ height: 30, width: 30 * LOGO_RATIO, display: "block" }} />
+            </div>
+          );
+          return onSite
+            ? <a href="/" title="The Power Gap Report — home" style={{ textDecoration: "none", cursor: "pointer" }}>{logo}</a>
+            : logo;
+        })()}
         <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
           {/* headline with the 2G light-green highlighter device behind the lower third of the text */}
           <div style={{ whiteSpace: "nowrap", lineHeight: 1.15 }}>
