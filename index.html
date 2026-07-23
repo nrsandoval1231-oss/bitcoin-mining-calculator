@@ -724,9 +724,17 @@ function CoolingToggle({ a, setA }) {
    "Custom" reveals the three fields to type. Grouped by maker for neutrality. */
 function RigPicker({ a, setA }) {
   const active = activeRig(a);
+  // Picking "Custom" must reveal the fields even when the current specs still match a catalog rig
+  // (they always do right after a catalog pick). Without this flag, activeRig(a) stays non-null, the
+  // select snaps back to that rig, and Custom is unreachable — the bug this fixes. The flag latches
+  // on until a catalog rig is chosen again; it also auto-engages for genuinely off-catalog specs.
+  const [customMode, setCustomMode] = useState(!active);
+  const showCustom = customMode || !active;
   const selectRig = (id) => {
+    if (id === "custom") { setCustomMode(true); return; } // keep current values, reveal the fields
+    setCustomMode(false);
     const r = RIGS.find((x) => x.id === id);
-    if (!r) return; // "custom" — keep current values, user edits the revealed fields
+    if (!r) return;
     setA({
       ...a,
       hashTH:    { ...a.hashTH,    v: r.hashTH },
@@ -738,7 +746,7 @@ function RigPicker({ a, setA }) {
   return (
     <div style={{ marginBottom: 14 }}>
       <label style={labelStyle}>Your mining rig</label>
-      <select value={active ? active.id : "custom"} onChange={(e) => selectRig(e.target.value)}
+      <select value={showCustom ? "custom" : active.id} onChange={(e) => selectRig(e.target.value)}
         style={{ ...inputStyle, cursor: "pointer" }}>
         {["Bitmain", "MicroBT"].map((mk) => (
           <optgroup key={mk} label={mk}>
@@ -749,7 +757,7 @@ function RigPicker({ a, setA }) {
         ))}
         <option value="custom">Custom (enter your own)</option>
       </select>
-      {active ? (
+      {!showCustom ? (
         <div style={{ fontSize: 10.5, color: C.muted, marginTop: 5, lineHeight: 1.4 }}>
           {active.hashTH} TH/s @ {rigDrawKW(active)} kW · {active.jTH} J/TH · ≈${active.price.toLocaleString()}/unit (price editable in Advanced)
         </div>
