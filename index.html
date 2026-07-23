@@ -83,7 +83,16 @@
     .print-tall thead { display: table-header-group; } /* repeat header on the 2nd page of the table */
     svg { break-inside: avoid; page-break-inside: avoid; }
     .print-card { break-inside: avoid; page-break-inside: avoid; }
-    .detail-body { display: block !important; } /* the collapsible steady-state table always prints, even when hidden on screen */
+    .detail-body { display: block !important; } /* collapsible sections (steady-state table, executive summary) always print */
+    /* PAGE 1 IS THE PITCH. The three beats are tightened just enough to land on one page together —
+       a leave-behind that splits the argument across a page break argues half as well — and the
+       supporting detail is pushed behind a hard break. */
+    .beat { padding: 9px 13px !important; margin-bottom: 6px !important; }
+    .beat-hero { font-size: 27px !important; }
+    .beat-tile { font-size: 15px !important; }
+    .beat-body { font-size: 12px !important; line-height: 1.4 !important; }
+    .beat-sub { font-size: 10.5px !important; line-height: 1.4 !important; }
+    .pitch-end { break-after: page; page-break-after: always; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
@@ -1235,6 +1244,9 @@ function App() {
     if (a.years.v > 2) parts.push("shorten to a ~2-year bridge through the halving");
     return parts.length ? `To make it pencil: ${parts.join(", ")}.` : "";
   })();
+  // The fix-lever card is the last card of the pitch when it renders, so it carries the print page
+  // break; beat 3 carries it otherwise. Page 1 of the leave-behind is the pitch, always.
+  const fixHintShows = !fProfit && !!fixHint;
   // shared phrasing for the takeaway card + executive summary, so they can never disagree
   const mwv = a.siteKW.v / 1000;
   const siteTxt = mwv >= 1 ? `${fmt(mwv, mwv < 10 ? 1 : 0)} MW` : `${fmt(a.siteKW.v, 0)} kW`;
@@ -1403,36 +1415,6 @@ function App() {
             </div>
 
 
-            {/* print-only assumptions block — the on-screen input rail is hidden in print, so a
-                sophisticated (O&G finance) reader can still see "at what assumptions" on the one-pager */}
-            <div className="print-only print-card" style={{ border: `1px solid ${C.line}`, borderRadius: 6, padding: "12px 16px", marginBottom: 14 }}>
-              <div style={{ fontWeight: 700, color: C.green, marginBottom: 8, fontSize: 13 }}>
-                Assumptions — {preset ? PRESETS[preset].label : "Custom"} · {dynamic ? "Dynamic" : "Static"} market · {yrs}-yr horizon
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "3px 18px", fontSize: 11 }}>
-                {[
-                  ["Site size", fmt(a.siteKW.v) + " kW"],
-                  ["Stranded gas", "$" + a.gasPrice.v.toFixed(2) + "/MCF"],
-                  ["BTC price", money(a.btcPrice.v)],
-                  ["Network hashrate", fmt(a.netHashEH.v) + " EH/s"],
-                  ["Hashrate growth", fmt(a.hashGrowth.v) + "%/yr"],
-                  ["Months to halving", fmt(a.halvingMo.v)],
-                  ["ASIC", fmt(a.hashTH.v) + " TH @ " + a.drawKW.v + " kW"],
-                  ["ASIC price", money(a.asicPrice.v)],
-                  ["Owned genset", money(a.msrpPerKW.v) + "/kW · " + fmt(a.ownedLagMo.v) + "-mo lead"],
-                  ["Owned uptime", fmt(a.ownUptime.v) + "%"],
-                  ["2G rate", money(a.rentalRate.v) + "/kW/mo"],
-                  ["2G uptime", fmt(a.rentUptime.v) + "%"],
-                  ["Grid power", "$" + a.gridRate.v.toFixed(2) + "/kWh ×" + a.gridUplift.v + " · " + fmt(a.gridLagMo.v) + "-mo wait"],
-                  ["Discount rate", a.discRate.v > 0 ? fmt(a.discRate.v) + "%/yr" : "off (nominal)"],
-                ].map(([l, v]) => (
-                  <div key={l} style={{ display: "flex", justifyContent: "space-between", gap: 8, borderBottom: `1px solid ${C.line}`, padding: "2px 0" }}>
-                    <span style={{ color: C.muted }}>{l}</span><span style={{ fontWeight: 600 }}>{v}</span>
-                  </div>
-                ))}
-              </div>
-              <div style={{ fontSize: 9.5, color: C.muted, marginTop: 8 }}>Budgetary — not a quote. Assumptions are adjustable; verify market data before use.</div>
-            </div>
 
             {/* ============================ THE PITCH, IN THREE BEATS ============================
                 1. Mining is tight at this price — for everyone. Said first, plainly, no spin.
@@ -1443,13 +1425,13 @@ function App() {
                 loss is one a miner stops trusting, and that trust is what makes beat 2 land. */}
 
             {/* ---- BEAT 1: the honest verdict ---- */}
-            <div style={{
+            <div className="beat" style={{
               background: fProfit ? C.greenLt : C.panel2,
               border: `1px solid ${fProfit ? C.green : C.red}`,
               borderRadius: 6, padding: "13px 18px", marginBottom: 12, display: "flex", gap: 12, alignItems: "flex-start",
             }}>
               <span style={{ fontSize: 16, lineHeight: 1.4, flexShrink: 0 }}>{fProfit ? "💡" : "⚠️"}</span>
-              <div style={{ fontSize: 14, lineHeight: 1.5, color: "#1a1a1a", fontWeight: 500 }}>
+              <div className="beat-body" style={{ fontSize: 14, lineHeight: 1.5, color: "#1a1a1a", fontWeight: 500, flex: 1 }}>
                 {/* Three states, and conflating them misreports the market: the focused shape clears;
                     it doesn't but another path does (a PATH problem); or nothing clears (a MARKET
                     problem). Only the last one gets the "tight for everyone" line. */}
@@ -1458,16 +1440,23 @@ function App() {
                   : profitable
                     ? `At ${btcTxt}, ${fp.verb} doesn't clear over ${yrs} years — but ${cmpLabel} does, at ${moneyM(cmpNet)}. That's a choice of power, not a verdict on the site.`
                     : `At ${btcTxt}, new-rig mining is tight for everyone — this ${siteTxt} site doesn't clear over ${yrs} years on any power source. ${viable != null ? `It takes bitcoin above ${money(viable)}` : "It takes a higher bitcoin price"}${m.rent.bePowerCost != null && m.rent.bePowerCost > 0 ? `, or power under ${fmt(m.rent.bePowerCost, 1)}¢/kWh` : ""}. That's the market, not this site.`}
+                {/* the levers live with the verdict — one card, not two: "here's the problem, here's
+                    what would change it" is a single thought, and it keeps page 1 to three cards */}
+                {fixHintShows && (
+                  <div style={{ fontSize: 12.5, color: C.green, fontWeight: 700, marginTop: 7, lineHeight: 1.45 }}>
+                    {fixHint}
+                  </div>
+                )}
               </div>
             </div>
 
             {/* ---- BEAT 2: the hero — what renting is worth against building your own ---- */}
-            <div style={{ background: C.panel, border: `2px solid ${advPositive ? C.green : C.owned}`, borderRadius: 6, padding: "18px 22px", marginBottom: 12, display: "flex", gap: 28, alignItems: "center", flexWrap: "wrap" }}>
+            <div className="beat" style={{ background: C.panel, border: `2px solid ${advPositive ? C.green : C.owned}`, borderRadius: 6, padding: "18px 22px", marginBottom: 12, display: "flex", gap: 28, alignItems: "center", flexWrap: "wrap" }}>
               <div style={{ minWidth: 260, flex: "1 1 340px" }}>
                 <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: ".12em", textTransform: "uppercase", color: C.muted }}>
                   {fp.verb} vs {cmpLabel} · {yrs} years
                 </div>
-                <div style={{ fontFamily: mono, fontSize: 40, fontWeight: 600, color: (fp.net - cmpNet) >= 0 ? C.green : C.owned, lineHeight: 1.15 }}>
+                <div className="beat-hero" style={{ fontFamily: mono, fontSize: 40, fontWeight: 600, color: (fp.net - cmpNet) >= 0 ? C.green : C.owned, lineHeight: 1.15 }}>
                   {money(Math.abs(fp.net - cmpNet))}
                 </div>
                 <div style={{ fontSize: 14, color: C.text, fontWeight: 700, maxWidth: 470, lineHeight: 1.45 }}>
@@ -1476,7 +1465,7 @@ function App() {
                     ? `, and hashing ${fmt(m.firstHashOwn - m.firstHashRent, 0)} months sooner`
                     : ""}.
                 </div>
-                <div style={{ fontSize: 12.5, color: C.muted, marginTop: 6, maxWidth: 470, lineHeight: 1.5 }}>
+                <div className="beat-sub" style={{ fontSize: 12.5, color: C.muted, marginTop: 6, maxWidth: 470, lineHeight: 1.5 }}>
                   {money(fp.net)} vs {money(cmpNet)} over {yrs} years
                   {fp.net < 0 && cmpNet < 0 && " — both lose at this bitcoin price"}
                   {focus === "rent" ? `, and renting sinks none of your capital into ${money(m.genCapex)} of generators.` : "."}
@@ -1484,7 +1473,7 @@ function App() {
                 </div>
                 {/* the boundary of the claim, stated by us rather than discovered by the customer */}
                 {focus === "rent" && bounds.advUntil != null && (
-                  <div style={{ fontSize: 11.5, color: C.muted, marginTop: 6, maxWidth: 470, lineHeight: 1.5 }}>
+                  <div className="beat-sub" style={{ fontSize: 11.5, color: C.muted, marginTop: 6, maxWidth: 470, lineHeight: 1.5 }}>
                     {bounds.advUntil >= 20
                       ? "Renting stays ahead at every horizon this model runs."
                       : `Renting stays ahead out to about ${bounds.advUntil} years. Run it longer and owned generators win — the iron is paid off by then, if mining still pays and you still want it.`}
@@ -1513,7 +1502,7 @@ function App() {
                 rebuilds + the generators themselves (net of resale) for owned; the utility bill +
                 interconnection for grid. Paired with the break-even, the gap × kWh IS the net cash,
                 so this card can never drift from the chart below it. */}
-            <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "14px 18px", marginBottom: 12 }}>
+            <div className="beat pitch-end" style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "14px 18px", marginBottom: 12 }}>
               <div style={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
                 <SectionTitle>What power costs, all-in, over {yrs} years</SectionTitle>
                 <Info>Every dollar each path spends to deliver a kWh — fuel, service, rebuilds and the generators themselves for owned; the rental rate and fuel for 2G; the utility bill and interconnection for grid. Divided by the kWh actually consumed over this horizon.</Info>
@@ -1534,19 +1523,13 @@ function App() {
                   </div>
                 ))}
               </div>
-              <div style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.55 }}>
+              <div className="beat-sub" style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.55 }}>
                 Every dollar each path spends to deliver a kWh, over this horizon.
                 {bounds.ownCheaperAt != null && bounds.ownCheaperAt <= 20 &&
                   ` Owned generators only beat the 2G rate past about ${bounds.ownCheaperAt} years, once the capital is amortized.`}
               </div>
             </div>
 
-            {/* the fix levers, when the focused shape doesn't clear */}
-            {!fProfit && fixHint && (
-              <div style={{ background: C.greenLt, border: `1px solid ${C.green}`, borderRadius: 6, padding: "11px 16px", marginBottom: 12, fontSize: 12.5, color: C.text, fontWeight: 600, lineHeight: 1.5 }}>
-                {fixHint}
-              </div>
-            )}
 
             {/* Earned CTA — the ask, placed AFTER the three beats have made the argument. It fires on
                 THE PITCH, not on profitability: renting beating gensets is the claim that survives every
@@ -1757,49 +1740,69 @@ function App() {
                 {showExec ? "▾ HIDE THE FULL WRITE-UP" : "▸ READ THE FULL WRITE-UP"}
               </button>
               <div className="detail-body" style={{ display: showExec ? "block" : "none", fontSize: 13.5, lineHeight: 1.7, color: C.text }}>
-                {/* Viability verdict first — an exec's first question is "does this pencil?", and the
-                    2G-vs-owned advantage below is a gap that can sit between two losses. */}
+                {/* Same three beats as the screen, in the same order, so the leave-behind and the live
+                    conversation can't tell different stories. 1) the market, 2) the decision, 3) the
+                    power cost. Each beat opens with the sentence a skimming reader should walk away with. */}
+
+                {/* BEAT 1 — the market */}
                 {profitable ? (
                   <>
                     <b style={{ color: C.green }}>At {btcTxt}, this project pencils.</b> Renting 2G power
-                    nets {money(m.best2G)} over {yrs} years against {money(m.own.net)} for
-                    owned generation.{" "}
+                    nets {money(m.best2G)} over {yrs} years against {money(m.own.net)} for owned generation.{" "}
                   </>
                 ) : (
                   <>
-                    <b style={{ color: C.red }}>At {btcTxt}, this project does not pencil over {yrs} years.</b> Renting 2G power
-                    nets {money(m.best2G)} over {yrs} years and owned generation
-                    {" "}{money(m.own.net)} — {rentCapexDriven
-                      ? <>mining does cover the power bill here; the shortfall is capital. The {money(m.sRent.capex)} of
+                    <b style={{ color: C.red }}>At {btcTxt}, new-rig mining is tight for everyone — this project doesn't clear over {yrs} years on any power source.</b>{" "}
+                    Renting 2G power nets {money(m.best2G)} and owned generation {money(m.own.net)}. {rentCapexDriven
+                      ? <>Mining does cover the power bill here; the shortfall is capital. The {money(m.sRent.capex)} of
                         equipment takes about <b>{m.sRent.payback ? fmt(m.sRent.payback, 1) : "—"} years</b> to earn back at
                         <i> today's</i> network, so a {yrs}-year window closes before payback — and because difficulty compounds
                         at {fmt(a.hashGrowth.v)}%/yr with the halving on top, {longerHorizon && longerHorizon.helps
                           ? <>stretching to {longerHorizon.years} years does help here</>
-                          : <>a longer horizon does not rescue it</>}. The real levers are cheaper hardware
-                        or a higher bitcoin price</>
-                      : <>mining revenue does not cover the cost of power at these assumptions
-                        {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}</>}. Everything below
-                    compares two losing paths: read it as path selection, not as a business case.{" "}
+                          : <>a longer horizon does not rescue it</>}. The levers are cheaper hardware or a higher
+                        bitcoin price{viable != null ? <> — this site clears above <b>{money(viable)}</b></> : ""}.</>
+                      : <>Mining revenue does not cover the cost of power at these assumptions
+                        {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}.</>}{" "}
+                    That is the market, not this site — and what follows is path selection, not a business case.{" "}
                   </>
                 )}
-                <b style={{ color: C.green }}>Time to power is the decisive variable.</b> Factory lead times for MW-class
-                natural gas gensets now run roughly a year or more, and large gas turbines are quoting 3–5 years — while a 2G
-                rental fleet deploys from inventory in weeks. In this model the owned path hashes its first block
-                in month {fmt(m.firstHashOwn)}; the 2G path in month {fmt(m.firstHashRent)}. Every month of waiting burns the
-                richest remaining hashprice: network difficulty compounds at {fmt(a.hashGrowth.v)}%/yr in this model and the
-                next halving (~April 2028) cuts issuance in half.
-                {" "}<b style={{ color: advPositive ? C.green : C.owned }}>
-                  The 2G path is {money(Math.abs(m.advantage))} {advPositive ? "better" : "worse"} than owning over {yrs} years
-                </b> in the current scenario
-                {!profitable && (advPositive ? <> — a smaller loss, not a profit</> : <>, and both are losses</>)}. It
-                avoids {money(m.genCapex)} of generation CapEx, carries a {fmt(a.rentUptime.v)}% uptime
-                guarantee with full service (owner-operated wellhead fleets typically achieve 80–90%), and preserves the
-                option to demobilize if mining economics deteriorate — owned iron cannot be un-bought.
-                {" "}<b style={{ color: C.grid }}>Buying grid power is the third option — and usually the weakest.</b> A new
-                large load faces a multi-year interconnection queue ({dynamic ? fmt(a.gridLagMo.v) + " months to first hash here" : "modeled as instant in static mode"})
+
+                {/* BEAT 2 — the decision */}
+                <b style={{ color: advPositive ? C.green : C.owned }}>
+                  Renting power is {money(Math.abs(m.advantage))} {advPositive ? "better" : "worse"} than buying generators over {yrs} years
+                </b>
+                {!profitable && (advPositive ? <> — a smaller loss, not a profit</> : <>, and both are losses</>)}, and time to
+                power is why. Factory lead times for MW-class natural gas gensets now run roughly a year or more, and large gas
+                turbines are quoting 3–5 years, while a 2G rental fleet deploys from inventory in weeks: here the owned path
+                hashes its first block in month {fmt(m.firstHashOwn)} against month {fmt(m.firstHashRent)} for 2G, and every
+                month of waiting burns the richest remaining hashprice. Renting also avoids {money(m.genCapex)} of generation
+                CapEx, carries a {fmt(a.rentUptime.v)}% uptime guarantee with full service (owner-operated wellhead fleets
+                typically achieve 80–90%), and preserves the option to demobilize if mining economics deteriorate — owned iron
+                cannot be un-bought.
+                {bounds.advUntil != null && bounds.advUntil < 20 && (
+                  <> <b>That advantage is horizon-bounded:</b> renting leads out to about {bounds.advUntil} years,
+                    after which owned generators win on cash — the capital is amortized by then, if mining still pays and you
+                    still want the iron.</>
+                )}{" "}
+
+                {/* BEAT 3 — the power cost */}
+                <b>All-in, power costs {m.rent.deliveredPowerCost != null ? fmt(m.rent.deliveredPowerCost, 1) + "¢/kWh" : "—"} rented
+                  from 2G against {m.own.deliveredPowerCost != null ? fmt(m.own.deliveredPowerCost, 1) + "¢/kWh" : "—"} on
+                  owned generators over this horizon</b> — fuel, service, rebuilds and the generators themselves, divided by the
+                kWh actually consumed. {bounds.ownCheaperAt != null && bounds.ownCheaperAt <= 20
+                  ? <>Owned generation only undercuts the rental rate past about {bounds.ownCheaperAt} years, once that capital
+                    is spread thin enough.</>
+                  : <>Owned generation does not undercut the rental rate at any horizon this model runs.</>}{" "}
+                {m.rent.bePowerCost != null && (m.rent.bePowerCost <= 0
+                  ? <>This site would need power at <b>no cost at all</b> and still not clear inside {yrs} years — the hardware,
+                    not the power, is what it can't carry.</>
+                  : <>To break even over {yrs} years after paying for the miners, this site needs power at
+                    or below <b>{fmt(m.rent.bePowerCost, 1)}¢/kWh</b>.</>)}{" "}
+                <b style={{ color: C.grid }}>Grid power is the third option, and usually the weakest.</b> A new large load faces a
+                multi-year interconnection queue ({dynamic ? fmt(a.gridLagMo.v) + " months to first hash here" : "modeled as instant in static mode"})
                 and an all-in delivered cost near {fmt(m.sGrid.powerCost, 1)}¢/kWh once demand and capacity charges layer on top
-                of the ${a.gridRate.v.toFixed(2)}/kWh headline rate — above what mining revenue supports at today's hashprice.
-                Where genuinely cheap, available grid power exists, that math flips: lower the grid rate and the model will show it.
+                of the ${a.gridRate.v.toFixed(2)}/kWh headline rate. Where genuinely cheap, available grid power exists, that math
+                flips: lower the grid rate and the model will show it.
               </div>
               <div style={{ fontSize: 11, color: C.muted, marginTop: 12, lineHeight: 1.6, fontFamily: mono }}>
                 Verified Jul 2026: BTC ≈ $62–64k · network ≈ 940 EH/s (peaked &gt;1,000 EH/s early 2026) · hashprice ≈ $29/PH/day ·
@@ -1809,6 +1812,37 @@ function App() {
                 {" "}Simplification, disclosed: all paths buy today's ASICs at today's price even when they deploy years out (owned/grid would really buy cheaper, more-efficient rigs later — this is slightly conservative *toward* 2G).
                 {" "}All figures budgetary and illustrative — actual results depend on miner efficiency, network conditions, pool fees, and gas contract terms.
               </div>
+            </div>
+
+            {/* print-only assumptions block — the on-screen input rail is hidden in print, so a
+                sophisticated (O&G finance) reader can still see "at what assumptions" on the one-pager */}
+            <div className="print-only print-card" style={{ border: `1px solid ${C.line}`, borderRadius: 6, padding: "12px 16px", marginBottom: 14 }}>
+              <div style={{ fontWeight: 700, color: C.green, marginBottom: 8, fontSize: 13 }}>
+                Assumptions — {preset ? PRESETS[preset].label : "Custom"} · {dynamic ? "Dynamic" : "Static"} market · {yrs}-yr horizon
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "3px 18px", fontSize: 11 }}>
+                {[
+                  ["Site size", fmt(a.siteKW.v) + " kW"],
+                  ["Stranded gas", "$" + a.gasPrice.v.toFixed(2) + "/MCF"],
+                  ["BTC price", money(a.btcPrice.v)],
+                  ["Network hashrate", fmt(a.netHashEH.v) + " EH/s"],
+                  ["Hashrate growth", fmt(a.hashGrowth.v) + "%/yr"],
+                  ["Months to halving", fmt(a.halvingMo.v)],
+                  ["ASIC", fmt(a.hashTH.v) + " TH @ " + a.drawKW.v + " kW"],
+                  ["ASIC price", money(a.asicPrice.v)],
+                  ["Owned genset", money(a.msrpPerKW.v) + "/kW · " + fmt(a.ownedLagMo.v) + "-mo lead"],
+                  ["Owned uptime", fmt(a.ownUptime.v) + "%"],
+                  ["2G rate", money(a.rentalRate.v) + "/kW/mo"],
+                  ["2G uptime", fmt(a.rentUptime.v) + "%"],
+                  ["Grid power", "$" + a.gridRate.v.toFixed(2) + "/kWh ×" + a.gridUplift.v + " · " + fmt(a.gridLagMo.v) + "-mo wait"],
+                  ["Discount rate", a.discRate.v > 0 ? fmt(a.discRate.v) + "%/yr" : "off (nominal)"],
+                ].map(([l, v]) => (
+                  <div key={l} style={{ display: "flex", justifyContent: "space-between", gap: 8, borderBottom: `1px solid ${C.line}`, padding: "2px 0" }}>
+                    <span style={{ color: C.muted }}>{l}</span><span style={{ fontWeight: 600 }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 9.5, color: C.muted, marginTop: 8 }}>Budgetary — not a quote. Assumptions are adjustable; verify market data before use.</div>
             </div>
 
           </div>
