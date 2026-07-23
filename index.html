@@ -1027,6 +1027,7 @@ function App() {
   // A shared/tuned link opens in Advanced so the recipient can see the custom assumptions.
   const [simple, setSimple] = useState(!boot);
   const [showDetail, setShowDetail] = useState(false); // steady-state annual table collapsed by default
+  const [showExec, setShowExec] = useState(false);     // executive summary collapsed on screen, always printed
   const [focus, setFocus] = useState("rent"); // which deal shape the headline speaks to: rent | own | grid
   const [copied, setCopied] = useState(false);
   const [live, setLive] = useState(null); // { state:'loading'|'ok'|'err', msg }
@@ -1492,13 +1493,12 @@ function App() {
               </div>
               <div style={{ display: "flex", gap: 24, marginLeft: "auto", flexWrap: "wrap" }}>
                 {[
+                  // Three tiles, not five. Uptime advantage (+13 pts) and the rent-vs-own flip price
+                  // were true but not decisive, and every extra number costs the hero number attention.
+                  // Both still live in the steady-state table and the executive summary.
                   ["First hash", dynamic ? `Mo ${fmt(m.firstHashRent)} vs Mo ${fmt(m.firstHashOwn)}` : "same day", "The month each path mines its first bitcoin. 2G deploys from inventory; owned generation waits on genset lead time."],
-                  ["Uptime advantage", "+" + fmt(m.uptimeDeltaPts, 0) + " pts", "Extra percentage points of run-time from the 2G guaranteed-uptime fleet vs a self-operated one. More uptime = more mining hours."],
                   ["Genset cost avoided", money(m.genCapex), "Up-front cash you don't spend on buying generators — 2G supplies the fleet, so that capital stays in the business."],
                   ["Profitable above", viable == null ? "—" : money(viable), "The bitcoin price this project needs just to break even — below it, mining doesn't cover the cost of power on any path. This is the real go / no-go number."],
-                  // NOTE: a BITCOIN-PRICE crossover. The horizon crossover ("renting stays ahead out to
-                  // ~N years") is a different boundary and lives in beat 2 — don't let the two labels blur.
-                  ["Rent-vs-own flip price", be == null ? (m.advantage >= 0 ? "2G ahead at any price" : "owned ahead at any price") : money(be), "The BITCOIN PRICE at which the two paths swap places: above it renting 2G wins, below it owning edges ahead. Separate from the horizon boundary — renting's cash advantage also shrinks the longer you run. Both paths can still be losses either way."],
                 ].map(([l, v, tip]) => (
                   <div key={l}>
                     <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: C.muted, display: "flex", alignItems: "center" }}>{l}{tip && <Info>{tip}</Info>}</div>
@@ -1533,30 +1533,11 @@ function App() {
                     {v == null && <div style={{ fontSize: 10.5, color: C.muted }}>no power inside {yrs} yrs</div>}
                   </div>
                 ))}
-                <div style={{ border: `1px dashed ${C.muted}`, borderRadius: 6, padding: "9px 12px" }}>
-                  <div style={{ fontFamily: mono, fontSize: 9.5, letterSpacing: ".06em", textTransform: "uppercase", color: C.muted }}>
-                    What you'd need<Info>The most you could pay per kWh, all-in, and still come out even over this horizon after buying the miners. Above it the site loses money on any power source; below it, it clears.</Info>
-                  </div>
-                  <div style={{ fontFamily: mono, fontSize: 21, fontWeight: 700, color: C.text, marginTop: 2 }}>
-                    {m.rent.bePowerCost == null ? "—"
-                      : m.rent.bePowerCost <= 0 ? "free isn't enough"
-                        : <>{fmt(m.rent.bePowerCost, 1)}¢<span style={{ fontSize: 11, fontWeight: 400, color: C.muted }}>/kWh</span></>}
-                  </div>
-                </div>
               </div>
               <div style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.55 }}>
-                {m.rent.bePowerCost != null && m.rent.bePowerCost <= 0
-                  ? `Over ${yrs} years the miners cost more than the site can mine, so no power price — not even free — clears it. That's a horizon and hardware problem, not a power problem.`
-                  : m.rent.deliveredPowerCost != null && m.rent.bePowerCost != null && m.rent.deliveredPowerCost <= m.rent.bePowerCost
-                    ? `2G lands under what this site needs, with ${fmt(m.rent.bePowerCost - m.rent.deliveredPowerCost, 1)}¢/kWh to spare.`
-                    : `2G's rate sits ${fmt(m.rent.deliveredPowerCost - m.rent.bePowerCost, 1)}¢/kWh above what this site needs at ${btcTxt} — cheaper power alone won't close it; the bitcoin price has to do the work.`}
+                Every dollar each path spends to deliver a kWh, over this horizon.
                 {bounds.ownCheaperAt != null && bounds.ownCheaperAt <= 20 &&
-                  ` Owned generators only beat the 2G rate per kWh past about ${bounds.ownCheaperAt} years, once the capital is amortized.`}
-              </div>
-              {/* Reconciles the two modes so they never look like they contradict each other. */}
-              <div className="no-print" style={{ fontSize: 11.5, color: C.muted, marginTop: 8, lineHeight: 1.5, borderTop: `1px solid ${C.line}`, paddingTop: 8 }}>
-                “Does mining pay?” reads <strong style={{ color: mA.profitDay >= 0 ? C.green : C.red }}>{money(mA.profitDay)}/day</strong> at {fmt(a.powerCost.v, 1)}¢/kWh — revenue minus the power bill, nothing else.
-                These numbers also carry the {moneyM(m.hwCapex)} of miners, the months before first hash, real uptime, difficulty growth and the halving across {yrs} years.
+                  ` Owned generators only beat the 2G rate past about ${bounds.ownCheaperAt} years, once the capital is amortized.`}
               </div>
             </div>
 
@@ -1607,11 +1588,11 @@ function App() {
             {/* mining engine strip */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 14 }}>
               {[
+                // BTC/day and implied hashprice dropped from the strip — one is redundant with revenue,
+                // the other is industry jargon. Both remain in the steady-state table for anyone digging.
                 ["ASICs deployed", fmt(m.nASIC, 0), "Number of mining machines the site's power can run. Each rig here is a current-gen " + (activeCooling(a) ? COOLING[activeCooling(a)].name + " " : "") + "ASIC."],
                 ["Fleet hashrate", fmt(m.fleetTH / 1000, 0) + " PH/s", "Total computing power of the fleet. PH/s = petahash per second (1,000 TH/s). More hashrate = a bigger share of the network's rewards."],
-                ["BTC mined / day", fmt(m.dailyBTC, 4), "Bitcoin the fleet earns per day at 100% uptime and today's network difficulty."],
                 ["Rev / day @ 100%, today", money(m.baseRevDay), "Daily mining revenue in dollars at full uptime and today's BTC price, before power and pool costs."],
-                ["Implied hashprice", "$" + fmt(m.hashprice, 2) + "/PH/day", "Industry yardstick: dollars a miner earns per petahash per day. It falls as the network grows and after each halving."],
               ].map(([l, v, tip]) => (
                 <div key={l} style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: "10px 12px" }}>
                   <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: ".08em", textTransform: "uppercase", color: C.muted, display: "flex", alignItems: "center" }}>{l}{tip && <Info>{tip}</Info>}</div>
@@ -1764,10 +1745,18 @@ function App() {
               </div>
             </div>
 
-            {/* exec summary */}
+            {/* exec summary — the longest block on the page by far, and the three beats above already
+                carry the argument on screen. Collapsed by default; ALWAYS prints (.detail-body), because
+                the one-pager is where a finance reader wants the full written case. */}
             <div style={{ background: C.panel, border: `1px solid ${C.line}`, borderRadius: 6, padding: 18 }}>
               <SectionTitle>Executive summary</SectionTitle>
-              <div style={{ fontSize: 13.5, lineHeight: 1.7, color: C.text }}>
+              <button
+                className="no-print"
+                onClick={() => setShowExec((s) => !s)}
+                style={{ ...segBtn(false), width: "100%", marginBottom: showExec ? 12 : 0, textAlign: "left", padding: "8px 12px" }}>
+                {showExec ? "▾ HIDE THE FULL WRITE-UP" : "▸ READ THE FULL WRITE-UP"}
+              </button>
+              <div className="detail-body" style={{ display: showExec ? "block" : "none", fontSize: 13.5, lineHeight: 1.7, color: C.text }}>
                 {/* Viability verdict first — an exec's first question is "does this pencil?", and the
                     2G-vs-owned advantage below is a gap that can sit between two losses. */}
                 {profitable ? (
