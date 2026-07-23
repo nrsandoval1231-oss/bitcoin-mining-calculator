@@ -1134,6 +1134,17 @@ function App() {
   const cmpNet = focus === "rent" ? m.own.net : m.rent.net;
   const cmpNpv = focus === "rent" ? m.own.npv : m.rent.npv;
   const cmpLabel = focus === "rent" ? "buying your own gensets" : "renting from 2G";
+  // A negative net cash has two very different causes, and naming the wrong one sends the customer
+  // to fix the wrong thing:
+  //   (a) OPERATING — mining revenue doesn't cover the power bill. The site bleeds every month.
+  //   (b) CAPITAL — the power pays fine, but the equipment doesn't earn itself back inside the
+  //       horizon (buy $4.9M of rigs, run 2 years, and the window closes before payback).
+  // Steady-state operating cash flow (`ocf`) tells them apart: positive ocf = case (b).
+  const shapeSteady = focus === "own" ? m.sOwn : focus === "grid" ? m.sGrid : m.sRent;
+  const capexDriven = !fProfit && shapeSteady.ocf > 0;
+  const paybackYrs = shapeSteady.payback;   // years to earn back the capital at the steady-state run rate
+  // same test, fixed on the rent path — the exec summary is rent-centric regardless of the focus buttons
+  const rentCapexDriven = m.rent.net < 0 && m.sRent.ocf > 0;
 
   const groups = {};
   Object.keys(DEFAULTS).forEach((k) => {
@@ -1153,6 +1164,14 @@ function App() {
   const fixHint = (() => {
     if (profitable) return "";
     const parts = [];
+    // A capital-payback shortfall needs the OPPOSITE horizon advice from an operating loss:
+    // stretch the comparison out past payback, don't shorten it into a bridge.
+    if (capexDriven) {
+      if (a.asicPrice.v > 0) parts.push("start from rigs you already own");
+      if (paybackYrs && paybackYrs > a.years.v) parts.push(`compare over ${Math.ceil(paybackYrs)}+ years so the miners clear payback`);
+      if (viable != null) parts.push(`or get BTC above ${money(viable)}`);
+      return parts.length ? `To make it pencil: ${parts.join(", ")}.` : "";
+    }
     if (viable != null) parts.push(`get BTC above ${money(viable)}`);
     if (a.years.v > 2) parts.push("shorten to a ~2-year bridge through the halving");
     if (a.asicPrice.v > 0) parts.push("start from rigs you already own");
@@ -1175,7 +1194,13 @@ function App() {
     const absTxt = moneyM(Math.abs(fp.net));
     const lead = fProfit
       ? `On a ${siteTxt} site, ${fp.verb} nets about ${absTxt} over ${yrs} years at ${btcTxt}`
-      : `On a ${siteTxt} site, ${fp.verb} loses about ${absTxt} over ${yrs} years at ${btcTxt}`;
+      : capexDriven
+        ? `On a ${siteTxt} site, ${fp.verb} comes up about ${absTxt} short over ${yrs} years at ${btcTxt} — the power pays for itself, the ${m.hwCapex > 0 ? "miners" : "equipment"} just don't clear payback that fast`
+        : `On a ${siteTxt} site, ${fp.verb} loses about ${absTxt} over ${yrs} years at ${btcTxt}`;
+    // "neither path pays" is an OPERATING verdict — don't say it when the shortfall is capital payback
+    const noPay = capexDriven
+      ? ` Stretch the horizon past payback${paybackYrs ? ` (about ${fmt(paybackYrs, 1)} years)` : ""} or start from rigs you already own before writing it off.`
+      : ` Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
 
     if (focus === "rent") {
       // 2G's own offer — measure it against building your own gensets (the DIY competitor).
@@ -1186,15 +1211,17 @@ function App() {
           ? `${lead} — ${gap} better than buying your own gensets${soonerTxt}, and it avoids ${money(m.genCapex)} of up-front genset cost.`
           : `${lead}. Buying your own gensets shows ${gap} more on paper, but only if the gensets arrive on time and run — 2G deploys from inventory${soonerTxt}, guarantees ${fmt(a.rentUptime.v)}% uptime, and ties up none of the ${money(m.genCapex)} in gensets.`;
       }
+      // the capex-driven lead already spends an em-dash, so start a fresh sentence instead of a second one
+      const join = capexDriven ? ". " : " — ";
       return rentWins
-        ? `${lead} — renting from 2G is ${gap} better than buying your own gensets${soonerTxt}, but neither path pays at this bitcoin price. Check the break-even BTC before taking it further.`
-        : `${lead}, and buying your own gensets loses ${gap} less. Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
+        ? `${lead}${join}${capexDriven ? "R" : "r"}enting from 2G is ${gap} better than buying your own gensets${soonerTxt}.${noPay}`
+        : `${lead}${capexDriven ? ". Buying" : ", and buying"} your own gensets comes out ${gap} better.${noPay}`;
     }
 
     // Buying your own gensets or waiting for grid — measure the shape against 2G's offer (renting).
     const gap = money(Math.abs(fp.net - m.rent.net));
     const rentBetter = m.rent.net >= fp.net;
-    const pay = fProfit ? "" : ` Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
+    const pay = fProfit ? "" : noPay;
     const compare = rentBetter
       ? ` Renting power from 2G comes out ${gap} ahead${soonerTxt} — nothing sunk into generators and ${fmt(a.rentUptime.v)}% guaranteed uptime.`
       : ` That is ${gap} ahead of renting from 2G on paper, but only if the equipment lands on time and holds the assumed uptime.`;
@@ -1420,13 +1447,22 @@ function App() {
                 <div style={{ fontSize: 12.5, color: C.text, fontWeight: 600, maxWidth: 460, lineHeight: 1.45 }}>
                   {fProfit
                     ? `This site nets ${moneyM(fp.net)} over ${yrs} years by ${fp.verb}.`
-                    : `This site loses ${moneyM(Math.abs(fp.net))} over ${yrs} years — mining doesn't cover the cost of power at these assumptions.`}
+                    : capexDriven
+                      ? `This site is ${moneyM(Math.abs(fp.net))} short over ${yrs} years — mining covers the power bill, but ${m.hwCapex > 0 ? `the ${moneyM(m.hwCapex)} of miners don't` : "the equipment doesn't"} earn back inside ${yrs} years${paybackYrs ? ` (payback runs about ${fmt(paybackYrs, 1)} years)` : ""}.`
+                      : `This site loses ${moneyM(Math.abs(fp.net))} over ${yrs} years — mining doesn't cover the cost of power at these assumptions.`}
                 </div>
                 {!fProfit && fixHint && (
                   <div style={{ fontSize: 12, color: C.green, fontWeight: 700, marginTop: 6, maxWidth: 460, lineHeight: 1.45 }}>
                     {fixHint}
                   </div>
                 )}
+                {/* Reconciles the two modes. "Does mining pay?" is a right-now snapshot — revenue minus
+                    the power bill, nothing else — so it can read healthy while this view shows a loss.
+                    Spelling out the difference stops it looking like the tool contradicts itself. */}
+                <div className="no-print" style={{ fontSize: 11.5, color: C.muted, marginTop: 7, maxWidth: 470, lineHeight: 1.5 }}>
+                  “Does mining pay?” reads <strong style={{ color: mA.profitDay >= 0 ? C.green : C.red }}>{money(mA.profitDay)}/day</strong> at {fmt(a.powerCost.v, 1)}¢/kWh — that's revenue minus the power bill, nothing else.
+                  This view also charges {m.hwCapex > 0 ? `the ${moneyM(m.hwCapex)} of miners, ` : ""}the months before first hash, real uptime, difficulty growth and the halving across {yrs} years.
+                </div>
                 <div style={{ fontSize: 12, color: C.muted, marginTop: 5 }}>
                   vs {cmpLabel}:{" "}
                   <strong style={{ color: (fp.net - cmpNet) >= 0 ? C.green : C.owned }}>
@@ -1650,10 +1686,15 @@ function App() {
                   </>
                 ) : (
                   <>
-                    <b style={{ color: C.red }}>At {btcTxt}, this project does not pencil.</b> Renting 2G power
+                    <b style={{ color: C.red }}>At {btcTxt}, this project does not pencil over {yrs} years.</b> Renting 2G power
                     nets {money(m.best2G)} over {yrs} years and owned generation
-                    {" "}{money(m.own.net)} — mining revenue does not cover the cost of power at these assumptions
-                    {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}. Everything below
+                    {" "}{money(m.own.net)} — {rentCapexDriven
+                      ? <>mining does cover the power bill here; the shortfall is capital. The {money(m.sRent.capex)} of
+                        equipment takes about <b>{m.sRent.payback ? fmt(m.sRent.payback, 1) : "—"} years</b> to earn back at
+                        this run rate, so a {yrs}-year window closes before payback. Lengthen the horizon, start from rigs
+                        already owned, or hold out for a higher bitcoin price</>
+                      : <>mining revenue does not cover the cost of power at these assumptions
+                        {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}</>}. Everything below
                     compares two losing paths: read it as path selection, not as a business case.{" "}
                   </>
                 )}
