@@ -252,10 +252,13 @@ const DEFAULTS = {
    ~2 years through the current high-reward window (before the ≈2028 halving). The
    full-build and upside shapes are one click away and honest when selected. */
 const PRESETS = {
+  // Boot default. Buys the rigs — per Nick (2026-07-23), a customer very rarely already owns ASICs,
+  // so a $0 hardware line was the unrealistic case, not the realistic one. `asicPrice: 0` is still
+  // fully supported (type it in, or use the "rigs you already own" lever the copy suggests).
   bridge: {
-    label: "BRIDGE · YOU OWN RIGS",
-    desc: "You already own your miners. Rent 2G power for ~2 years through the current high-reward window. Profitable at today's $63k — no market recovery needed.",
-    patch: { asicPrice: 0, years: 2, rentalRate: 38, btcPrice: 63000, priceGrowth: 0, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
+    label: "BRIDGE · BUY RIGS",
+    desc: "You buy your miners and rent 2G power for ~2 years through the current high-reward window — no generators bought, nothing stranded if mining slows.",
+    patch: { asicPrice: 5650, years: 2, rentalRate: 38, btcPrice: 63000, priceGrowth: 0, hashGrowth: 10, hashTH: 270, drawKW: 3.645 },
   },
   build: {
     label: "FULL BUILD · NEW RIGS",
@@ -1145,6 +1148,18 @@ function App() {
   const paybackYrs = shapeSteady.payback;   // years to earn back the capital at the steady-state run rate
   // same test, fixed on the rent path — the exec summary is rent-centric regardless of the focus buttons
   const rentCapexDriven = m.rent.net < 0 && m.sRent.ocf > 0;
+  // "Run it longer and the rigs clear payback" is intuitive and OFTEN WRONG here: payback is computed
+  // on today's network, while the model grows difficulty and applies the halving, so a longer window
+  // can make things worse. Never offer the lever on faith — re-run the model at the longer horizon
+  // and only suggest it if it actually helps.
+  const longerHorizon = useMemo(() => {
+    if (!capexDriven || !paybackYrs) return null;
+    const y = Math.min(a.years.max || 20, Math.ceil(paybackYrs));
+    if (y <= a.years.v) return null;
+    const alt = computeModel({ ...a, years: { ...a.years, v: y } }, dynamic);
+    const net = focus === "own" ? alt.own.net : focus === "grid" ? alt.grid.net : alt.rent.net;
+    return { years: y, net, helps: net > fp.net, pays: net >= 0 };
+  }, [a, dynamic, capexDriven, paybackYrs, focus, fp.net]);
 
   const groups = {};
   Object.keys(DEFAULTS).forEach((k) => {
@@ -1168,9 +1183,13 @@ function App() {
     // stretch the comparison out past payback, don't shorten it into a bridge.
     if (capexDriven) {
       if (a.asicPrice.v > 0) parts.push("start from rigs you already own");
-      if (paybackYrs && paybackYrs > a.years.v) parts.push(`compare over ${Math.ceil(paybackYrs)}+ years so the miners clear payback`);
-      if (viable != null) parts.push(`or get BTC above ${money(viable)}`);
-      return parts.length ? `To make it pencil: ${parts.join(", ")}.` : "";
+      // only if re-running the model at that horizon actually improves the outcome
+      if (longerHorizon && longerHorizon.helps) parts.push(`compare over ${longerHorizon.years} years so the miners clear payback`);
+      if (viable != null) parts.push(`get BTC above ${money(viable)}`);
+      const tail = longerHorizon && !longerHorizon.helps
+        ? ` A longer horizon won't do it — difficulty growth and the halving outrun the payback.`
+        : "";
+      return parts.length ? `To make it pencil: ${parts.join(", ")}.${tail}` : "";
     }
     if (viable != null) parts.push(`get BTC above ${money(viable)}`);
     if (a.years.v > 2) parts.push("shorten to a ~2-year bridge through the halving");
@@ -1199,7 +1218,9 @@ function App() {
         : `On a ${siteTxt} site, ${fp.verb} loses about ${absTxt} over ${yrs} years at ${btcTxt}`;
     // "neither path pays" is an OPERATING verdict — don't say it when the shortfall is capital payback
     const noPay = capexDriven
-      ? ` Stretch the horizon past payback${paybackYrs ? ` (about ${fmt(paybackYrs, 1)} years)` : ""} or start from rigs you already own before writing it off.`
+      ? (longerHorizon && longerHorizon.helps
+          ? ` Run it out to ${longerHorizon.years} years and the miners clear payback${longerHorizon.pays ? " and the project turns positive" : ""} — or start from rigs you already own.`
+          : ` A longer horizon doesn't rescue it: difficulty growth and the halving outrun the payback, so it takes cheaper rigs, rigs you already own, or a higher bitcoin price.`)
       : ` Neither path pays at this bitcoin price — check the break-even BTC before taking it further.`;
 
     if (focus === "rent") {
@@ -1691,8 +1712,11 @@ function App() {
                     {" "}{money(m.own.net)} — {rentCapexDriven
                       ? <>mining does cover the power bill here; the shortfall is capital. The {money(m.sRent.capex)} of
                         equipment takes about <b>{m.sRent.payback ? fmt(m.sRent.payback, 1) : "—"} years</b> to earn back at
-                        this run rate, so a {yrs}-year window closes before payback. Lengthen the horizon, start from rigs
-                        already owned, or hold out for a higher bitcoin price</>
+                        <i> today's</i> network, so a {yrs}-year window closes before payback — and because difficulty compounds
+                        at {fmt(a.hashGrowth.v)}%/yr with the halving on top, {longerHorizon && longerHorizon.helps
+                          ? <>stretching to {longerHorizon.years} years does help here</>
+                          : <>a longer horizon does not rescue it</>}. The real levers are rigs already owned, cheaper
+                        hardware, or a higher bitcoin price</>
                       : <>mining revenue does not cover the cost of power at these assumptions
                         {viable != null ? <>, which need BTC near <b>{money(viable)}</b> to clear</> : ""}</>}. Everything below
                     compares two losing paths: read it as path selection, not as a business case.{" "}
